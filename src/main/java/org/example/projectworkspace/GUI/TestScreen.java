@@ -19,6 +19,7 @@ import javafx.scene.layout.StackPane;
 public class TestScreen extends Application {
     Label label1,label2, label3;
     TextField text1,text2;
+    Stage stage;
 
 
 
