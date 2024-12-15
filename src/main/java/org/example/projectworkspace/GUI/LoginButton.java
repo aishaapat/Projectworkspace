@@ -7,6 +7,8 @@ public class LoginButton extends Button {
     public LoginButton() {
         super("Log In");
 
+        // Notes
+
         // Styling the button
         this.setStyle("-fx-background-color: #4CAF50; -fx-text-fill: white; -fx-font-size: 16px; -fx-padding: 10px 20px;");
 
