@@ -40,13 +40,17 @@ public class TestScreen extends Application {
 
         LoginButton loginButton = new LoginButton();
         root.add(loginButton, 1, 3);
+        RegisterButton registerButton = new RegisterButton();
+        root.add(registerButton, 2, 3);
         root.getChildren();
 
-        Scene scene = new Scene(root, 400, 300);
+        Scene scene = new Scene(root, 600, 600);
 
         stage.setTitle("Welcome to Easy Flying!");
         stage.setScene(scene);
 
+        //set resizable as false
+        stage.setResizable(false);
         stage.show();
     }
 
