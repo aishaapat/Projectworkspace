@@ -35,6 +35,8 @@ public class RegisterScreen extends Application
         ssn=new TextField();
         email=new TextField();
         security=new TextField();
+        username = new TextField();
+        password = new TextField();
 
         root.add(First,0,0);
         root.add(Last,0,1);
