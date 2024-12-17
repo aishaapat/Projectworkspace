@@ -13,7 +13,7 @@
 <?import javafx.scene.paint.Stop?>
 <?import javafx.scene.text.Font?>
 
-<HBox fx:id="stage" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="624.0" prefWidth="843.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1">
+<HBox fx:id="stage1" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="624.0" prefWidth="843.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.example.projectworkspace.GUI.Scenechanges">
    <children>
       <AnchorPane fx:id="pane1" prefHeight="528.0" prefWidth="344.0">
          <children>
@@ -22,7 +22,7 @@
                   <Image url="@flight.jpg" />
                </image>
             </ImageView>
-            <Button fx:id="registerButton" layoutX="112.0" layoutY="324.0" mnemonicParsing="false" prefHeight="38.0" prefWidth="111.0" style="-fx-background-color: #545050;" text="Register" />
+            <Button fx:id="registerButton" layoutX="112.0" layoutY="324.0" mnemonicParsing="false" onAction="#switch2" prefHeight="38.0" prefWidth="111.0" style="-fx-background-color: #545050;" text="Register" />
          </children>
       </AnchorPane>
       <AnchorPane fx:id="pane2" prefHeight="624.0" prefWidth="517.0" style="-fx-background-color: #973b3b;">
