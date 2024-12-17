@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.PasswordField?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.paint.Color?>
+<?import javafx.scene.paint.LinearGradient?>
+<?import javafx.scene.paint.Stop?>
+<?import javafx.scene.text.Font?>
+
+<HBox fx:id="stage" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="624.0" prefWidth="843.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1">
+   <children>
+      <AnchorPane fx:id="pane1" prefHeight="528.0" prefWidth="344.0">
+         <children>
+            <ImageView fx:id="image" fitHeight="183.0" fitWidth="434.0" layoutX="85.0" layoutY="55.0" nodeOrientation="INHERIT" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@flight.jpg" />
+               </image>
+            </ImageView>
+            <Button fx:id="registerButton" layoutX="112.0" layoutY="324.0" mnemonicParsing="false" prefHeight="38.0" prefWidth="111.0" style="-fx-background-color: #545050;" text="Register" />
+         </children>
+      </AnchorPane>
+      <AnchorPane fx:id="pane2" prefHeight="624.0" prefWidth="517.0" style="-fx-background-color: #973b3b;">
+         <children>
+            <TextField fx:id="tf_username" layoutX="282.0" layoutY="206.0" nodeOrientation="LEFT_TO_RIGHT" prefHeight="26.0" prefWidth="212.0" style="-fx-background-color: ffffff;" />
+            <PasswordField fx:id="tf_password" layoutX="282.0" layoutY="312.0" prefHeight="26.0" prefWidth="218.0" style="-fx-background-color: ffffff;" />
+            <Button fx:id="EnterButton1" layoutX="367.0" layoutY="408.0" mnemonicParsing="false" prefHeight="38.0" prefWidth="111.0" style="-fx-background-color: #545050;" text="Enter" />
+            <Label fx:id="username_title" alignment="TOP_CENTER" layoutX="104.0" layoutY="200.0" prefHeight="38.0" prefWidth="161.0" style="-fx-background-color: #973b3b;" text="Username" textFill="WHITE">
+               <font>
+                  <Font size="22.0" />
+               </font>
+            </Label>
+            <Label fx:id="password_title" alignment="TOP_CENTER" layoutX="104.0" layoutY="306.0" prefHeight="38.0" prefWidth="161.0" text="Password">
+               <font>
+                  <Font size="22.0" />
+               </font>
+            </Label>
+            <Label fx:id="titletext" alignment="TOP_CENTER" contentDisplay="TOP" layoutY="39.0" prefHeight="138.0" prefWidth="508.0" text="Easy Flying!">
+               <textFill>
+                  <LinearGradient endX="1.0" endY="1.0">
+                     <stops>
+                        <Stop>
+                           <color>
+                              <Color red="1.0" green="1.0" blue="1.0" />
+                           </color>
+                        </Stop>
+                        <Stop offset="1.0">
+                           <color>
+                              <Color red="1.0" green="1.0" blue="1.0" />
+                           </color>
+                        </Stop>
+                     </stops>
+                  </LinearGradient>
+               </textFill>
+               <font>
+                  <Font size="45.0" />
+               </font>
+            </Label>
+            <Button fx:id="securityButton" layoutX="352.0" layoutY="474.0" mnemonicParsing="false" prefHeight="38.0" prefWidth="126.0" style="-fx-background-color: #545050;" text="Forgot password?" />
+         </children>
+      </AnchorPane>
+   </children>
+</HBox>
