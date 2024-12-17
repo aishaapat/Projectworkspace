@@ -1,5 +1,6 @@
 package org.example.projectworkspace.Flights;
 
+import java.sql.Timestamp;
 import java.util.Date;
 
 public class Flight {
@@ -70,24 +71,24 @@ public class Flight {
         this.currentCapacity = currentCapacity;
     }
 
-    public Date getTakeoff() {
-        return takeoff;
+    public Timestamp getTakeoff() {
+        return (Timestamp) takeoff;
     }
 
     public void setTakeoff(Date takeoff) {
         this.takeoff = takeoff;
     }
 
-    public Date getLanding() {
-        return landing;
+    public Timestamp getLanding() {
+        return (Timestamp) landing;
     }
 
     public void setLanding(Date landing) {
         this.landing = landing;
     }
 
-    public Date getDate() {
-        return date;
+    public java.sql.Date getDate() {
+        return (java.sql.Date) date;
     }
 
     public void setDate(Date date) {
