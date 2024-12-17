@@ -17,7 +17,7 @@ public class flightDAO {
 
     // Create a new flight in the database
     public boolean createFlight(Flight flight) {
-        String sql = "INSERT INTO flights (number, destination, depatureLocation, capacity, currentCapacity, takeoff, landing, date, status) " +
+        String sql = "INSERT INTO flights (number, destination, departureLocation, capacity, currentCapacity, takeoff, landing, date, status) " +
                 "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
         try (PreparedStatement stmt = connection.prepareStatement(sql)) {
@@ -41,7 +41,7 @@ public class flightDAO {
 
     // Retrieve a flight by its ID
     public Flight getFlightById(int id) {
-        String sql = "SELECT * FROM flights WHERE id = ?";
+        String sql = "SELECT * FROM flights WHERE number = ?";
 
         try (PreparedStatement stmt = connection.prepareStatement(sql)) {
             stmt.setInt(1, id); // Set the flight ID
@@ -96,20 +96,21 @@ public class flightDAO {
     }
 
     // Update an existing flight
-    public boolean updateFlight(Flight flight) {
-        String sql = "UPDATE flights SET destination = ?, depatureLocation = ?, capacity = ?, currentCapacity = ?, " +
+    public boolean updateFlight(int fid, String destination, String departureLocation, int capacity, int currentCapacity,
+                                Timestamp takeoff, Timestamp landing, Date date, String status) {
+        String sql = "UPDATE flights SET destination = ?, departureLocation = ?, capacity = ?, currentCapacity = ?, " +
                 "takeoff = ?, landing = ?, date = ?, status = ? WHERE number = ?";
 
         try (PreparedStatement stmt = connection.prepareStatement(sql)) {
-            stmt.setString(1, flight.getDestination());
-            stmt.setString(2, flight.getDepartureLocation());
-            stmt.setInt(3, flight.getCapacity());
-            stmt.setInt(4, flight.getCurrentCapacity());
-            stmt.setTimestamp(5, flight.getTakeoff());
-            stmt.setTimestamp(6, flight.getLanding());
-            stmt.setDate(7, flight.getDate());
-            stmt.setString(8, flight.getStatus());
-            stmt.setInt(9, flight.getFid());
+            stmt.setString(1, destination);
+            stmt.setString(2, departureLocation);
+            stmt.setInt(3, capacity);
+            stmt.setInt(4, currentCapacity);
+            stmt.setTimestamp(5, takeoff);
+            stmt.setTimestamp(6, landing);
+            stmt.setDate(7, date);
+            stmt.setString(8, status);
+            stmt.setInt(9, fid); // Update based on the flight ID (fid)
 
             int result = stmt.executeUpdate();
             return result > 0;
@@ -121,7 +122,7 @@ public class flightDAO {
 
     // Delete a flight by its ID
     public boolean deleteFlight(int id) {
-        String sql = "DELETE FROM flights WHERE id = ?";
+        String sql = "DELETE FROM flights WHERE number = ?";
 
         try (PreparedStatement stmt = connection.prepareStatement(sql)) {
             stmt.setInt(1, id); // Set the flight ID
