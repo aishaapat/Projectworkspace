@@ -1,4 +1,6 @@
-package Database;
+package Database.TestDatabaseMethods;
+
+import Database.DatabaseManager;
 
 import java.sql.Connection;
 

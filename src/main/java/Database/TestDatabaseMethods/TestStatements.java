@@ -1,12 +1,4 @@
-package Database;
-
-import org.example.projectworkspace.Authentication.User;
-import org.example.projectworkspace.Authentication.userDAO;
-import org.example.projectworkspace.Flights.Flight;
-import org.example.projectworkspace.Flights.flightDAO;
-
-import java.sql.Date;
-import java.sql.Timestamp;
+package Database.TestDatabaseMethods;
 
 // Test class to test database operations using methods
 
