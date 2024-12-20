@@ -47,7 +47,7 @@ public class TestScreen extends Application {
         root.add(label3, 3, 2);
         root.add(text2, 4, 2);
 
-        LoginButton loginButton = new LoginButton();
+        LoginButton loginButton = new LoginButton(text1, text2);
         root.add(loginButton, 7, 3);
         RegisterButton registerButton = new RegisterButton();
         root.add(registerButton, 8, 3);
