@@ -8,5 +8,8 @@ module org.example.projectworkspace {
     requires io.github.cdimascio.dotenv.java;
 
     exports org.example.projectworkspace to javafx.fxml;
-    exports org.example.projectworkspace.GUI to javafx.graphics;
+    exports org.example.projectworkspace.GUI to javafx.graphics, javafx.fxml;
+
+    opens org.example.projectworkspace.GUI to javafx.fxml;
+
 }
