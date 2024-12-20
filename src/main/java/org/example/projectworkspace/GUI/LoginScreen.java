@@ -6,13 +6,10 @@ import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
+import javafx.scene.control.*;
 import javafx.scene.layout.GridPane;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
 import javafx.stage.Stage;
 import javafx.geometry.Insets;
-import javafx.scene.control.PasswordField;
-import javafx.scene.control.TextField;
 
 public class LoginScreen extends Application implements EventHandler<ActionEvent> {
     Label label1, label2, label3;
@@ -95,7 +92,13 @@ public class LoginScreen extends Application implements EventHandler<ActionEvent
 
         if (username.isEmpty() || password.isEmpty()) {
             System.out.println("Please enter both username and password.");
-            return;  // Or show an alert
+            Alert alert = new Alert(Alert.AlertType.WARNING);
+            alert.setTitle("Error");
+            alert.setHeaderText("Error in loging in");
+            alert.setContentText("Please enter a username and password.");
+            alert.showAndWait();
+
+            return;  // Or show an alert // I added the alert
         }
 
         // Add your login validation logic here
