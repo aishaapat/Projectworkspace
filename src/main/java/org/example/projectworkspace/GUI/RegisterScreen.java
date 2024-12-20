@@ -12,15 +12,18 @@ import javafx.geometry.Insets;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.StackPane;
 
-public class RegisterScreen extends Application {
-    Label title,label1, label2, label3, label4, label5, label6, label7, label8, label9, label10, label11;
+public class RegisterScreen extends Application implements EventHandler<ActionEvent> {
+    Label title, label1, label2, label3, label4, label5, label6, label7, label8, label9, label10, label11;
     TextField First, Last, address, zip, state, username, password, email, ssn, security, answer;
     EnterButton enter = new EnterButton();
+    BackButton back = new BackButton();
     Stage stage;
+
 
     @Override
     public void start(Stage stage) throws Exception {
         GridPane root = new GridPane();
+        this.stage = stage;
         root.getStyleClass().add("background-primary");
         root.setAlignment(Pos.CENTER);
         root.setVgap(10);
@@ -28,7 +31,8 @@ public class RegisterScreen extends Application {
         // Header Label (Title)
         title = new Label("Welcome to Easy Flying!");
         title.setStyle("-fx-font-size: 26px; -fx-font-weight: bold; -fx-text-fill: #4CAF50; -fx-padding: 15px;");
-        root.add(title, 0, 0,2,1);
+        root.add(title, 0, 0, 2, 1);
+
 
         First = new TextField();
         Last = new TextField();
@@ -54,7 +58,8 @@ public class RegisterScreen extends Application {
         root.add(security, 1, 10);
         root.add(answer, 1, 11);
         root.add(enter, 1, 12);
-
+        root.add(back, 2, 14);
+        back.setOnAction(this);
         // Initialize labels
         label1 = new Label("Enter First Name");
         label2 = new Label("Enter Last Name");
@@ -94,4 +99,16 @@ public class RegisterScreen extends Application {
     public static void main(String args[]) {
         launch(args);
     }
+
+    @Override
+    public void handle(ActionEvent actionEvent) {
+        if (actionEvent.getSource() == back) {
+            LoginScreen login = new LoginScreen();
+            login.start(new Stage());
+            stage.close();
+        }
+    }
 }
+
+
+

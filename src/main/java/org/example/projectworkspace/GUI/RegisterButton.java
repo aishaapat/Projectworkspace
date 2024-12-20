@@ -21,6 +21,8 @@ public class RegisterButton extends Button
 
         if (registerpressed) {
             System.out.println("Register button pressed");
+
+
         } else {
             System.out.println("Try again");
         }
