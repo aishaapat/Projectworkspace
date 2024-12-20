@@ -132,8 +132,15 @@ public class LoginScreen extends Application implements EventHandler<ActionEvent
                 throw new RuntimeException(e);
             }
             stage.close();
-
-
+        }
+        else if(actionEvent.getSource()==forgotPasswordButton) {
+            ForgotPasswordScreen forgotPasswordScreen = new ForgotPasswordScreen();
+            try {
+                forgotPasswordScreen.start(new Stage());
+            } catch (Exception e) {
+                throw new RuntimeException(e);
+            }
+            stage.close();
         }
 
     }

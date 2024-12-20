@@ -5,6 +5,7 @@ import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
+import javafx.scene.control.ComboBox;
 import javafx.scene.layout.GridPane;
 import javafx.scene.control.Label;
 import javafx.stage.Stage;
@@ -41,7 +42,6 @@ public class RegisterScreen extends Application implements EventHandler<ActionEv
         state = new TextField();
         ssn = new TextField();
         email = new TextField();
-        security = new TextField();
         username = new TextField();
         password = new TextField();
         answer = new TextField();
@@ -55,7 +55,14 @@ public class RegisterScreen extends Application implements EventHandler<ActionEv
         root.add(email, 1, 7);
         root.add(username, 1, 8);
         root.add(password, 1, 9);
-        root.add(security, 1, 10);
+        // taking out label and adding a combo boc
+        final ComboBox questions= new ComboBox();
+        questions.getItems().addAll(
+                "What is your favorite color?",
+                "What is your birthday?",
+                "What is the name of the city you were born?"
+        );
+        root.add(questions,1,10);
         root.add(answer, 1, 11);
         root.add(enter, 1, 12);
         root.add(back, 2, 14);
@@ -70,7 +77,7 @@ public class RegisterScreen extends Application implements EventHandler<ActionEv
         label7 = new Label("Enter SSN");
         label8 = new Label("Enter Username");
         label9 = new Label("Enter Password");
-        label10 = new Label("Enter Security Question");
+        label10 = new Label("Pick your Security Question");
         label11 = new Label("Enter Answer");
 
         // Add labels to GridPane
@@ -106,6 +113,9 @@ public class RegisterScreen extends Application implements EventHandler<ActionEv
             LoginScreen login = new LoginScreen();
             login.start(new Stage());
             stage.close();
+        }
+        else if(actionEvent.getSource() == enter) {
+
         }
     }
 }
