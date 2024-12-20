@@ -2,6 +2,7 @@ package org.example.projectworkspace.GUI;
 
 import javafx.application.Application;
 import javafx.event.ActionEvent;
+import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -13,7 +14,7 @@ import javafx.geometry.Insets;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 
-public class LoginScreen extends Application {
+public class LoginScreen extends Application implements EventHandler<ActionEvent> {
     Label label1, label2, label3;
     TextField text1;
     PasswordField text2;
@@ -59,12 +60,12 @@ public class LoginScreen extends Application {
         // Register Button
         registerButton = new Button("Register");
         registerButton.setStyle("-fx-background-color: #2196F3; -fx-text-fill: white; -fx-padding: 10px 20px; -fx-font-size: 16px;");
-        registerButton.setOnAction(this::handleRegister);
+        registerButton.setOnAction(this);
 
         // Forgot Password Button
         forgotPasswordButton = new Button("Forgot Password?");
         forgotPasswordButton.setStyle("-fx-text-fill: #FF5722; -fx-font-size: 14px;");
-        forgotPasswordButton.setOnAction(this::handleForgotPassword);
+        forgotPasswordButton.setOnAction(this);
 
         // Add components to layout
         root.add(label1, 0, 0, 2, 1);
@@ -106,11 +107,7 @@ public class LoginScreen extends Application {
     }
 
     // Handle Register Button click
-    private void handleRegister(ActionEvent event) {
-        // Logic to open a registration screen
-        System.out.println("Opening Register Screen...");
-        // You can create and show a new registration screen here
-    }
+
 
     // Handle Forgot Password Button click
     private void handleForgotPassword(ActionEvent event) {
@@ -121,5 +118,23 @@ public class LoginScreen extends Application {
 
     public static void main(String[] args) {
         launch(args);
+    }
+
+
+    @Override
+    public void handle(ActionEvent actionEvent)
+    {
+        if(actionEvent.getSource()==registerButton) {
+            RegisterScreen registerScreen = new RegisterScreen();
+            try {
+                registerScreen.start(new Stage());
+            } catch (Exception e) {
+                throw new RuntimeException(e);
+            }
+            stage.close();
+
+
+        }
+
     }
 }
