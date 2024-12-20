@@ -13,7 +13,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.StackPane;
 
 public class RegisterScreen extends Application {
-    Label label1, label2, label3, label4, label5, label6, label7, label8, label9, label10, label11;
+    Label title,label1, label2, label3, label4, label5, label6, label7, label8, label9, label10, label11;
     TextField First, Last, address, zip, state, username, password, email, ssn, security, answer;
     EnterButton enter = new EnterButton();
     Stage stage;
@@ -25,6 +25,10 @@ public class RegisterScreen extends Application {
         root.setAlignment(Pos.CENTER);
         root.setVgap(10);
         root.setAlignment(Pos.CENTER);
+        // Header Label (Title)
+        title = new Label("Welcome to Easy Flying!");
+        title.setStyle("-fx-font-size: 26px; -fx-font-weight: bold; -fx-text-fill: #4CAF50; -fx-padding: 15px;");
+        root.add(title, 0, 0,2,1);
 
         First = new TextField();
         Last = new TextField();
@@ -38,18 +42,18 @@ public class RegisterScreen extends Application {
         password = new TextField();
         answer = new TextField();
 
-        root.add(First, 1, 0);
-        root.add(Last, 1, 1);
-        root.add(address, 1, 2);
-        root.add(zip, 1, 3);
-        root.add(state, 1, 4);
-        root.add(ssn, 1, 5);
-        root.add(email, 1, 6);
-        root.add(username, 1, 7);
-        root.add(password, 1, 8);
-        root.add(security, 1, 9);
-        root.add(answer, 1, 10);
-        root.add(enter, 1, 11);
+        root.add(First, 1, 1);
+        root.add(Last, 1, 2);
+        root.add(address, 1, 3);
+        root.add(zip, 1, 4);
+        root.add(state, 1, 5);
+        root.add(ssn, 1, 6);
+        root.add(email, 1, 7);
+        root.add(username, 1, 8);
+        root.add(password, 1, 9);
+        root.add(security, 1, 10);
+        root.add(answer, 1, 11);
+        root.add(enter, 1, 12);
 
         // Initialize labels
         label1 = new Label("Enter First Name");
@@ -65,17 +69,17 @@ public class RegisterScreen extends Application {
         label11 = new Label("Enter Answer");
 
         // Add labels to GridPane
-        root.add(label1, 0, 0);
-        root.add(label2, 0, 1);
-        root.add(label3, 0, 2);
-        root.add(label4, 0, 3);
-        root.add(label5, 0, 4);
-        root.add(label6, 0, 5);
-        root.add(label7, 0, 6);
-        root.add(label8, 0, 7);
-        root.add(label9, 0, 8);
-        root.add(label10, 0, 9);
-        root.add(label11, 0, 10);
+        root.add(label1, 0, 1);
+        root.add(label2, 0, 2);
+        root.add(label3, 0, 3);
+        root.add(label4, 0, 4);
+        root.add(label5, 0, 5);
+        root.add(label6, 0, 6);
+        root.add(label7, 0, 7);
+        root.add(label8, 0, 8);
+        root.add(label9, 0, 9);
+        root.add(label10, 0, 10);
+        root.add(label11, 0, 11);
 
         Scene scene = new Scene(root, 800, 600);
 
