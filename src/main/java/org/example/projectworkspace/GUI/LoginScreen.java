@@ -100,6 +100,7 @@ public class LoginScreen extends Application implements EventHandler<ActionEvent
 
             return;  // Or show an alert // I added the alert
         }
+        //
 
         // Add your login validation logic here
 

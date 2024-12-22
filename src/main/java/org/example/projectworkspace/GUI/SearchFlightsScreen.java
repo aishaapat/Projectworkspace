@@ -2,6 +2,7 @@ package org.example.projectworkspace.GUI;
 
 import javafx.application.Application;
 import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.layout.GridPane;
@@ -13,7 +14,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.ComboBox;
 
-public class SearchFlightsScreen extends Application {
+public class SearchFlightsScreen extends Application implements EventHandler<ActionEvent> {
 
     Label label1, label2, label3;
     TextField fromCityField, toCityField;
@@ -22,6 +23,8 @@ public class SearchFlightsScreen extends Application {
     Button searchButton, bookButton, deleteButton;
     Stage stage;
     String loggedInUsername = "username"; // Replace with actual username from login
+    // had to move some buttons above the start method so that the event handler can get it
+    BackButton back = new BackButton();
 
     @Override
     public void start(Stage stage) {
@@ -65,6 +68,10 @@ public class SearchFlightsScreen extends Application {
         deleteButton = new Button("Delete Flight");
         deleteButton.setOnAction(this::handleDeleteFlight);
 
+
+        back.setOnAction(this);
+
+
         // Add components to grid
         root.add(label1, 0, 0, 2, 1);
         root.add(label2, 0, 1);
@@ -78,6 +85,7 @@ public class SearchFlightsScreen extends Application {
         root.add(searchButton, 0, 5, 2, 1);
         root.add(bookButton, 0, 6);
         root.add(deleteButton, 1, 6);
+        root.add(back, 1, 7);
 
         Scene scene = new Scene(root, 600, 400);
         stage.setTitle("Post Login - Flight Booking");
@@ -119,5 +127,15 @@ public class SearchFlightsScreen extends Application {
     // Main method to launch the application
     public static void main(String[] args) {
         launch(args);
+    }
+
+    @Override
+    public void handle(ActionEvent actionEvent) {
+        if(actionEvent.getSource()==back){
+            ManageBookingsScreen manageBookingsScreen = new ManageBookingsScreen();
+            manageBookingsScreen.start(new Stage());
+            stage.close();
+
+        }
     }
 }

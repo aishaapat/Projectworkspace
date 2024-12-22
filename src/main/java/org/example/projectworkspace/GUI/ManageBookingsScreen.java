@@ -19,10 +19,13 @@ import javafx.geometry.Insets;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
-public class ManageBookingsScreen extends Application {
+public class ManageBookingsScreen extends Application implements EventHandler<ActionEvent> {
 
     Stage stage;
     String loggedInUsername = "username"; // Replace with actual username from login
+    // had to move this button again for event handler
+    Button searchButton = new Button("Search Flights");
+
 
     // Sample data for booked flights (you can replace this with real database queries)
     ObservableList<Flight> bookedFlights = FXCollections.observableArrayList(
@@ -71,9 +74,7 @@ public class ManageBookingsScreen extends Application {
         Button deleteButton = new Button("Delete Flight");
         deleteButton.setOnAction(e -> handleDeleteFlight(tableView));
 
-        // Search button action (go to search screen)
-        Button searchButton = new Button("Search Flights");
-        searchButton.setOnAction(this::handleSearchFlights);
+        searchButton.setOnAction(this);
 
         // Back to Main Menu Button
         Button backButton = new Button("Back to Main Menu");
@@ -129,6 +130,18 @@ public class ManageBookingsScreen extends Application {
 
     public static void main(String[] args) {
         launch(args);
+    }
+
+    @Override
+    public void handle(ActionEvent actionEvent)
+    {
+        // adding search flights pane
+        if(actionEvent.getSource()==searchButton){
+            SearchFlightsScreen searchFlightsScreen = new SearchFlightsScreen();
+            searchFlightsScreen.start(new Stage());
+            stage.close();
+        }
+
     }
 }
 
