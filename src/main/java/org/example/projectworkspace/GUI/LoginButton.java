@@ -62,9 +62,8 @@ public class LoginButton extends Button {
             {
                 String storedUsername = resultSet.getString("username");
                 String storedPassword = resultSet.getString("password");
-                if(enteredUsername.equals(storedUsername))
-                {
-                    if (enteredPassword.equals(storedPassword))
+
+                    if (enteredPassword.equals(storedPassword)&& enteredUsername.equals(storedUsername))
                     {
                         return true;
                     }
@@ -72,8 +71,6 @@ public class LoginButton extends Button {
                     {
                         return false;
                     }
-                }
-                else return false;
 
             }
             else return false;
