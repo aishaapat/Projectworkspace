@@ -49,7 +49,8 @@ public class LoginButton extends Button {
             return false;
         }
 
-        try {
+        try
+        {
             String sql = "SELECT password FROM users WHERE username = ?";
 
             var preparedStatement = connection.prepareStatement(sql);
@@ -57,18 +58,28 @@ public class LoginButton extends Button {
 
             var resultSet = preparedStatement.executeQuery();
 
-            if (resultSet.next()) {
+            if (resultSet.next())
+            {
+                String storedUsername = resultSet.getString("username");
                 String storedPassword = resultSet.getString("password");
-
-                if (enteredPassword.equals(storedPassword)) {
-                    return true;
-                } else {
-                    return false;
+                if(enteredUsername.equals(storedUsername))
+                {
+                    if (enteredPassword.equals(storedPassword))
+                    {
+                        return true;
+                    }
+                    else
+                    {
+                        return false;
+                    }
                 }
-            } else {
-                return false;
+                else return false;
+
             }
-        } catch (SQLException e) {
+            else return false;
+
+        }
+        catch (SQLException e) {
             System.out.println("Error during login: " + e.getMessage());
             e.printStackTrace();
             return false;
