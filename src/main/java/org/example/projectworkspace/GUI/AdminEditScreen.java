@@ -73,6 +73,14 @@ public class AdminEditScreen extends Application implements EventHandler<ActionE
     public void handle(ActionEvent actionEvent)
     {
         // Adding this so when admin clicks manageflights they will be sent to otherscreen
-
+        if(actionEvent.getSource()==manageflightsbutton){
+            AdminManageFlightsScreen  admin=new AdminManageFlightsScreen();
+            try {
+                admin.start(new Stage());
+            } catch (Exception e) {
+                throw new RuntimeException(e);
+            }
+            stage.close();
+        }
     }
 }
