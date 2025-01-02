@@ -45,7 +45,7 @@ public class AdminMainMenu extends Application {
         // TODO : Add method handler for -> ManageFlights.setOnAction(this::handleManageFlights);
 
         // Add components to layout
-        root.add(title, 0, 0, 3w, 1);  // Spans 2 columns
+        root.add(title, 0, 0, 3, 1);  // Spans 2 columns
         GridPane.setHalignment(title, javafx.geometry.HPos.CENTER); // Center the title horizontally
 
         root.add(manageBookingsButton, 0, 1);
