@@ -87,7 +87,14 @@ public class AdminManageFlightsScreen extends Application implements EventHandle
     public void handle(ActionEvent actionEvent)
     {
         if(actionEvent.getSource()==backbutton){
-            // add logic where it will lead back to the pane that was made for the the user's connection
+            AdminEditScreen adminedit=new AdminEditScreen();
+            try {
+                adminedit.start(new Stage());
+            } catch (Exception e) {
+                throw new RuntimeException(e);
+            }
+            stage.close();
+
         }
         else if(actionEvent.getSource()==AddButton){
             //I will create a subpane thay wil allow the user to add flights, I will not close this current stgae so it will be more of a
