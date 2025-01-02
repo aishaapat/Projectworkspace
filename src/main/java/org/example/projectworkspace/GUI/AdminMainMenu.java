@@ -2,15 +2,14 @@ package org.example.projectworkspace.GUI;
 
 import javafx.application.Application;
 import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
-import javafx.scene.layout.GridPane;
 import javafx.scene.control.Button;
-import javafx.stage.Stage;
+import javafx.scene.layout.GridPane;
 import javafx.scene.text.Text;
+import javafx.stage.Stage;
 
-public class mainMenu extends Application {
+public class AdminMainMenu extends Application {
 
     Stage stage;
     String FirstName = "username"; // Replace with actual firstname of user
@@ -26,25 +25,32 @@ public class mainMenu extends Application {
         root.setHgap(10);
 
         // Title
-        Text title = new Text("Main Menu");
+        Text title = new Text("Admin Main Menu");
         title.setStyle("-fx-font-size: 24px; -fx-font-weight: bold;");
 
-        // Buttons for Manage Bookings and Logout
+        // Buttons for Manage Bookings, Logout, and a special button for managing flights
         Button manageBookingsButton = new Button("Manage Bookings");
         Button logoutButton = new Button("Logout");
+        Button ManageFlights = new Button("Manage Flights");
 
         // Action for Manage Bookings button
+        // :: is a method reference used to shorten action handlers like
+        // manageBookingsButton.setOnAction(event -> handleManageBookings(event));
         manageBookingsButton.setOnAction(this::handleManageBookings);
 
         // Action for Logout button
         logoutButton.setOnAction(this::handleLogout);
 
+        // Action for Manage Flights Button
+        // TODO : Add method handler for -> ManageFlights.setOnAction(this::handleManageFlights);
+
         // Add components to layout
-        root.add(title, 0, 0, 2, 1);  // Spans 2 columns
+        root.add(title, 0, 0, 3w, 1);  // Spans 2 columns
         GridPane.setHalignment(title, javafx.geometry.HPos.CENTER); // Center the title horizontally
 
         root.add(manageBookingsButton, 0, 1);
         root.add(logoutButton, 1, 1);
+        root.add(ManageFlights, 2, 1);
 
         // Set up the scene and stage
         Scene scene = new Scene(root, 400, 200);

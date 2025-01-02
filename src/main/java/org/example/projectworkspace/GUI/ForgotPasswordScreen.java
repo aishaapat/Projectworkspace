@@ -12,8 +12,6 @@ import javafx.stage.Stage;
 
 import java.sql.*;
 
-// TODO Review code, add necessary comments
-
 public class ForgotPasswordScreen extends Application implements EventHandler<ActionEvent> {
 
     Stage stage;
