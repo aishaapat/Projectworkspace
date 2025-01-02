@@ -6,13 +6,10 @@ import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
-import javafx.scene.control.Alert;
-import javafx.scene.control.DatePicker;
-import javafx.scene.control.Label;
+import javafx.scene.control.*;
 import javafx.scene.layout.GridPane;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
-import javafx.scene.control.TextField;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -22,9 +19,10 @@ public class AddFlightsScreen extends Application implements EventHandler<Action
 {
     Stage stage;
     EnterButton enterButton= new EnterButton();
-    TextField  fromCityField, toCityField,capacity,flightnumber,takeoff,landing;
+    TextField  fromCityField, toCityField,capacity,currentcapacity,takeoff,landing;
     DatePicker flightDate;
-    Label label1,label2,label3,label4,label5,label6,label7;
+    Label label1,label2,label3,label4,label5,label6,label7,label8;
+    ComboBox<String> status;
 
 
 
@@ -46,7 +44,7 @@ public class AddFlightsScreen extends Application implements EventHandler<Action
         label1 = new Label("From:");
         label2 = new Label("To:");
         label3 = new Label("Date:");
-        Scene scene = new Scene(root, 500, 450);
+        Scene scene = new Scene(root, 500, 500);
         root.add(title, 0, 0);
         root.add(fromCityField, 1, 1);
         root.add(toCityField, 1, 2);
@@ -60,10 +58,10 @@ public class AddFlightsScreen extends Application implements EventHandler<Action
         capacity = new TextField();
         root.add(label4,0,5);
         root.add(capacity,1,5);
-        label5= new Label("Flight number:");
-        flightnumber = new TextField();
+        label5= new Label("Current Capacity:");
+        currentcapacity = new TextField();
         root.add(label5,0,6);
-        root.add(flightnumber,1,6);
+        root.add(currentcapacity,1,6);
         // adding takeoff and landing time textinputs
         label6= new Label("Takeoff:");
         takeoff = new TextField();
@@ -73,8 +71,20 @@ public class AddFlightsScreen extends Application implements EventHandler<Action
         landing = new TextField();
         root.add(label7,0,8);
         root.add(landing,1,8);
+
+        // adding combo box for status
+        status= new ComboBox<>();
+        status.getItems().addAll(
+                "On Time",
+                "Delayed",
+                "Docked"
+        );
+        label8= new Label("Status:");
+        root.add(label8,0,9);
+        root.add(status,1,9);
         //add enter button
-        root.add(enterButton,1,9);
+
+        root.add(enterButton,1,10);
         root.setAlignment(Pos.CENTER);
         stage.setResizable(false);
         stage.setTitle("Admin Only- Add Flights");
@@ -92,12 +102,14 @@ public class AddFlightsScreen extends Application implements EventHandler<Action
         String toCity = toCityField.getText();
         String flightDateValue = flightDate.getValue() != null ? flightDate.getValue().toString() : null;
         int capacityValue= Integer.parseInt(capacity.getText());
-        String flightnumberValue=flightnumber.getText();
-        String takeoffValue=takeoff.getText();
-        String landingValue=landing.getText();
+        int currentcapacityValue=Integer.parseInt(currentcapacity.getText());
+        String takeoffValue=flightDateValue+" "+takeoff.getText() ;
+        String landingValue=flightDateValue+" "+landing.getText();
+        String check = status.getValue();
+        
 
         if(actionEvent.getSource() == enterButton) {
-            if (fromCity.isEmpty() | toCity.isEmpty() | flightDateValue.isEmpty()| capacityValue<0 | flightnumberValue.isEmpty() | takeoffValue.isEmpty() | landingValue.isEmpty())
+            if (fromCity.isEmpty() | toCity.isEmpty() | flightDateValue.isEmpty()| capacityValue<0 | currentcapacityValue<0 | takeoffValue.isEmpty() | landingValue.isEmpty())
             {
                 Alert alert = new Alert(Alert.AlertType.WARNING);
                 alert.setTitle("Warning");
@@ -107,7 +119,7 @@ public class AddFlightsScreen extends Application implements EventHandler<Action
             }
             else{
 
-                    String insertQuery = "INSERT INTO Flights (destination,departureLocation,capacity,takeoff,landing,date) VALUES (?, ?, ?, ?, ?, ?)";
+                    String insertQuery = "INSERT INTO Flights (destination,departureLocation,capacity,currentCapacity,takeoff,landing,date,status) VALUES (?, ?, ?, ?, ?, ?,?,?)";
                     Privateconnection db= new Privateconnection();
 
                     try (Connection connection=db.getConnection();
@@ -117,9 +129,11 @@ public class AddFlightsScreen extends Application implements EventHandler<Action
                         preparedStatement.setString(1, toCity);
                         preparedStatement.setString(2, fromCity);
                         preparedStatement.setInt(3, capacityValue);
-                        preparedStatement.setString(4, takeoffValue);
-                        preparedStatement.setString(5, landingValue);
-                        preparedStatement.setString(6, flightDateValue);
+                        preparedStatement.setInt(4, currentcapacityValue);
+                        preparedStatement.setString(5, takeoffValue);
+                        preparedStatement.setString(6, landingValue);
+                        preparedStatement.setString(7, flightDateValue);
+                        preparedStatement.setString(8, check);
                         int rowsAffected = preparedStatement.executeUpdate();
                         if (rowsAffected > 0) {
                             Alert alert = new Alert(Alert.AlertType.INFORMATION);
