@@ -50,7 +50,7 @@ public class LoginButton extends Button {
         }
 
         try {
-            String sql = "SELECT password FROM users WHERE username = ?";
+            String sql = "SELECT password, type FROM users WHERE username = ?";
 
             // var recognizes the prepared statement as an object of the prepared statement class
 
@@ -62,9 +62,10 @@ public class LoginButton extends Button {
             if (resultSet.next()) {
                 // Finds the password from the database
                 String storedPassword = resultSet.getString("password");
-
                 // Check if the entered password matches the one stored
                 if (enteredPassword.equals(storedPassword)) {
+                    String type = resultSet.getString("type");
+                    System.out.println("User type: " + type);
                     return true; // Login successful
                 } else {
                     System.out.println("Incorrect password.");
