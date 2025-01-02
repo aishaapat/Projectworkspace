@@ -37,7 +37,7 @@ public class LoginButton extends Button {
     }
 
     // Simulate login logic (replace with actual logic)
-    private boolean performLogin() {
+    public boolean performLogin() {
         String enteredUsername = text1.getText(); // Get username from text1
         String enteredPassword = text2.getText(); // Get password from text2
 
@@ -49,33 +49,33 @@ public class LoginButton extends Button {
             return false;
         }
 
-        try
-        {
+        try {
             String sql = "SELECT password FROM users WHERE username = ?";
+
+            // var recognizes the prepared statement as an object of the prepared statement class
 
             var preparedStatement = connection.prepareStatement(sql);
             preparedStatement.setString(1, enteredUsername);
 
             var resultSet = preparedStatement.executeQuery();
 
-            if (resultSet.next())
-            {
-                String storedUsername = resultSet.getString("username");
+            if (resultSet.next()) {
+                // Finds the password from the database
                 String storedPassword = resultSet.getString("password");
 
-                    if (enteredPassword.equals(storedPassword)&& enteredUsername.equals(storedUsername))
-                    {
-                        return true;
-                    }
-                    else
-                    {
-                        return false;
-                    }
-
+                // Check if the entered password matches the one stored
+                if (enteredPassword.equals(storedPassword)) {
+                    return true; // Login successful
+                } else {
+                    System.out.println("Incorrect password.");
+                    return false; // Login failed due to incorrect password
+                }
+            } else {
+                System.out.println("Username not found");
+                return false; // Username not found
             }
-            else return false;
-
         }
+
         catch (SQLException e) {
             System.out.println("Error during login: " + e.getMessage());
             e.printStackTrace();

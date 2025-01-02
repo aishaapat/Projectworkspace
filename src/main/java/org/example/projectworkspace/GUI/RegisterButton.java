@@ -8,8 +8,11 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 
 public class RegisterButton extends Button {
-    public RegisterButton() {
+    private RegisterScreen registerScreen;
+
+    public RegisterButton(RegisterScreen registerScreen) {
         super("Register");
+        this.registerScreen = registerScreen;
 
         // Styling the button
         this.setStyle("-fx-background-color: #4CAF50; -fx-text-fill: white; -fx-font-size: 16px; -fx-padding: 10px 20px;");
@@ -18,7 +21,6 @@ public class RegisterButton extends Button {
         this.setOnAction(event -> handleregister());
     }
 
-    // Event handler for register button click
     private void handleregister() {
         boolean success = performregister();
 
@@ -38,9 +40,7 @@ public class RegisterButton extends Button {
     }
 
     private boolean performregister() {
-        RegisterScreen registerScreen = new RegisterScreen();
-
-        // Collect data from RegisterScreen
+        // Access the fields from the provided RegisterScreen instance
         String firstName = registerScreen.First.getText();
         String lastName = registerScreen.Last.getText();
         String address = registerScreen.address.getText();
@@ -50,11 +50,10 @@ public class RegisterButton extends Button {
         String ssn = registerScreen.ssn.getText();
         String username = registerScreen.username.getText();
         String password = registerScreen.password.getText();
-        String question = registerScreen.security.getText();
+        String question = registerScreen.security.getValue() != null ? registerScreen.security.getValue().toString() : "";
         String answer = registerScreen.answer.getText();
 
-        // Validate inputs
-        if (firstName.isEmpty() || lastName.isEmpty() || username.isEmpty() || password.isEmpty() || question == null || answer.isEmpty()) {
+        if (firstName.isEmpty() || lastName.isEmpty() || username.isEmpty() || password.isEmpty() || question.isEmpty() || answer.isEmpty()) {
             Alert alert = new Alert(Alert.AlertType.WARNING);
             alert.setTitle("Missing Information");
             alert.setHeaderText(null);
@@ -63,11 +62,10 @@ public class RegisterButton extends Button {
             return false;
         }
 
-        // Insert user data into the database
         Privateconnection dbConnection = new Privateconnection();
         try (Connection connection = dbConnection.getConnection();
              PreparedStatement stmt = connection.prepareStatement(
-                     "INSERT INTO Users (FirstName, LastName, Address, ZipCode, State, Email, SSN, Username, Password, SecurityQuestion, SecurityAnswer) " +
+                     "INSERT INTO Users (FirstName, LastName, Address, ZipCode, State, Email, SSN, Username, Password, question, answer) " +
                              "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)")) {
 
             stmt.setString(1, firstName);
@@ -83,11 +81,11 @@ public class RegisterButton extends Button {
             stmt.setString(11, answer);
 
             stmt.executeUpdate();
-            return true; // Registration successful
+            return true;
 
         } catch (Exception e) {
             e.printStackTrace();
-            return false; // Registration failed
+            return false;
         }
     }
 }

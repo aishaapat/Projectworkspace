@@ -86,28 +86,23 @@ public class LoginScreen extends Application implements EventHandler<ActionEvent
 
     // Handle Login Button click
     private void handleLogin(ActionEvent event) {
-        // Placeholder logic for handling login
-        String username = text1.getText();
-        String password = text2.getText();
 
-        if (username.isEmpty() || password.isEmpty()) {
-            System.out.println("Please enter both username and password.");
-            Alert alert = new Alert(Alert.AlertType.WARNING);
-            alert.setTitle("Error");
-            alert.setHeaderText("Error in loging in");
-            alert.setContentText("Please enter a username and password.");
+        LoginButton loginButton = new LoginButton(text1, text2);
+
+        if (loginButton.performLogin()) {
+            System.out.println("Login Successful!");
+            mainMenu mainMenuScreen = new mainMenu();
+            mainMenuScreen.start(new Stage());
+            stage.close();
+        } else {
+            System.out.println("Login Failed.");
+            // Really cool you can make an error pop up with an error icon using the type
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Login Failed");
+            alert.setHeaderText("Invalid Credentials");
+            alert.setContentText("The username and/or password are incorrect.");
             alert.showAndWait();
-
-            return;  // Or show an alert // I added the alert
         }
-        //
-
-        // Add your login validation logic here
-
-        // On successful login, proceed to the next screen (MainMenuScreen)
-        mainMenu mainMenuScreen = new mainMenu();
-        mainMenuScreen.start(new Stage());
-        stage.close(); // Close the current login screen
     }
 
     // Handle Register Button click
