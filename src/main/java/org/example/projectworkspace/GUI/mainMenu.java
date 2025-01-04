@@ -14,9 +14,9 @@ import org.example.projectworkspace.UserState.LoggedIn;
 public class mainMenu extends Application {
 
     Stage stage;
-    String username;
-    // Replace with actual firstname of user
+
     LoggedIn loggedInUser;
+
     mainMenu(LoggedIn loggedInUser) {
         this.loggedInUser = loggedInUser;
     }
@@ -36,8 +36,10 @@ public class mainMenu extends Application {
         title.setStyle("-fx-font-size: 24px; -fx-font-weight: bold;");
         //adding log in to check if the user state stays logged in
 
+        String username=loggedInUser.getUserName();
 
-        Text welcometitle1 = new Text("Welcome"+" "+ loggedInUser.getUserName());
+
+        Text welcometitle1 = new Text("Welcome "+username);
         welcometitle1.setStyle("-fx-font-size: 20px; -fx-font-weight: bold;");
 
         // Buttons for Manage Bookings and Logout
