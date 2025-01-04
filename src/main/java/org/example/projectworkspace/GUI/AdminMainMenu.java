@@ -11,7 +11,7 @@ import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
 public class AdminMainMenu extends Application implements EventHandler<ActionEvent> {
-
+    
     Stage stage;
     String FirstName = "username"; // Replace with actual firstname of user
     // adding this to the top of the class because I am using eventhandler for this

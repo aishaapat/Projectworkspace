@@ -10,6 +10,7 @@ import javafx.scene.control.*;
 import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
 import javafx.geometry.Insets;
+import org.example.projectworkspace.UserState.LoggedIn;
 
 public class LoginScreen extends Application implements EventHandler<ActionEvent> {
     Label label1, label2, label3;
@@ -91,7 +92,13 @@ public class LoginScreen extends Application implements EventHandler<ActionEvent
 
         if (loginButton.performLogin()) {
             System.out.println("Login Successful!");
-            mainMenu mainMenuScreen = new mainMenu();
+            LoggedIn login=new LoggedIn();
+            String username=text1.getText();
+            String password=text2.getText();
+            login.setUserName(username);
+            login.setPassword(password);
+            login.setLoggedIn(true);
+            mainMenu mainMenuScreen = new mainMenu(login);
             mainMenuScreen.start(new Stage());
             stage.close();
         } else {

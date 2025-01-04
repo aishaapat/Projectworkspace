@@ -18,6 +18,7 @@ import javafx.scene.control.Alert.AlertType;
 import javafx.geometry.Insets;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import org.example.projectworkspace.UserState.LoggedIn;
 
 public class ManageBookingsScreen extends Application implements EventHandler<ActionEvent> {
 
@@ -80,7 +81,8 @@ public class ManageBookingsScreen extends Application implements EventHandler<Ac
         Button backButton = new Button("Back to Main Menu");
         backButton.setOnAction(e -> {
             // Navigate to Main Menu screen (you can replace this with actual navigation logic)
-            mainMenu mainMenuScreen = new mainMenu();
+            LoggedIn login = new LoggedIn();
+            mainMenu mainMenuScreen = new mainMenu(login);
             mainMenuScreen.start(new Stage());
             stage.close(); // Close the current screen (ManageBookingsScreen)
         });

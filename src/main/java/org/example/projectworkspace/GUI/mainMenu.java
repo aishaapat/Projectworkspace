@@ -9,11 +9,17 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.control.Button;
 import javafx.stage.Stage;
 import javafx.scene.text.Text;
+import org.example.projectworkspace.UserState.LoggedIn;
 
 public class mainMenu extends Application {
 
     Stage stage;
-    String FirstName = "username"; // Replace with actual firstname of user
+    String username;
+    // Replace with actual firstname of user
+    LoggedIn loggedInUser;
+    mainMenu(LoggedIn loggedInUser) {
+        this.loggedInUser = loggedInUser;
+    }
 
     @Override
     public void start(Stage stage) {
@@ -28,6 +34,11 @@ public class mainMenu extends Application {
         // Title
         Text title = new Text("Main Menu");
         title.setStyle("-fx-font-size: 24px; -fx-font-weight: bold;");
+        //adding log in to check if the user state stays logged in
+
+
+        Text welcometitle1 = new Text("Welcome"+" "+ loggedInUser.getUserName());
+        welcometitle1.setStyle("-fx-font-size: 20px; -fx-font-weight: bold;");
 
         // Buttons for Manage Bookings and Logout
         Button manageBookingsButton = new Button("Manage Bookings");
@@ -41,6 +52,7 @@ public class mainMenu extends Application {
 
         // Add components to layout
         root.add(title, 0, 0, 2, 1);  // Spans 2 columns
+        root.add(welcometitle1, 0, 1, 3, 1);
         GridPane.setHalignment(title, javafx.geometry.HPos.CENTER); // Center the title horizontally
 
         root.add(manageBookingsButton, 0, 1);
@@ -63,6 +75,10 @@ public class mainMenu extends Application {
 
     // Handle Logout button click
     private void handleLogout(ActionEvent event) {
+        //adding logic where loggedin state will be closed
+        loggedInUser.setLoggedIn(false);
+        loggedInUser.setUserName(null);
+        loggedInUser.setPassword(null);
         // Close the current screen and go back to the login screen
         System.out.println("Logging out...");
         LoginScreen loginScreen = new LoginScreen(); // Replace with your Login screen class
