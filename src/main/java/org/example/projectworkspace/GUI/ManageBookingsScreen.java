@@ -23,8 +23,7 @@ import org.example.projectworkspace.UserState.LoggedIn;
 public class ManageBookingsScreen extends Application implements EventHandler<ActionEvent> {
 
     Stage stage;
-    String loggedInUsername = "username"; // Replace with actual username from login
-    // had to move this button again for event handler
+  // going to replace with a loggedin class instead
     Button searchButton = new Button("Search Flights");
 
 
