@@ -14,9 +14,14 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
+import org.example.projectworkspace.UserState.LoggedIn;
 
 public class AdminManageFlightsScreen extends Application implements EventHandler<ActionEvent>
 {
+    LoggedIn login;
+    AdminManageFlightsScreen(LoggedIn login){
+        this.login = login;
+    }
     Stage stage;
     TableView<Flight> tableView = new TableView<>();
     //adding all the buttons for this pane
@@ -87,7 +92,7 @@ public class AdminManageFlightsScreen extends Application implements EventHandle
     public void handle(ActionEvent actionEvent)
     {
         if(actionEvent.getSource()==backbutton){
-            AdminEditScreen adminedit=new AdminEditScreen();
+            AdminEditScreen adminedit=new AdminEditScreen(login);
             try {
                 adminedit.start(new Stage());
             } catch (Exception e) {

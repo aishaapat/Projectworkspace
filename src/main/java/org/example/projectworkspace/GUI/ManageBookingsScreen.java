@@ -21,6 +21,11 @@ import javafx.collections.ObservableList;
 import org.example.projectworkspace.UserState.LoggedIn;
 
 public class ManageBookingsScreen extends Application implements EventHandler<ActionEvent> {
+    LoggedIn login;
+    ManageBookingsScreen(){}
+    ManageBookingsScreen(LoggedIn login){
+        this.login = login;
+    }
 
     Stage stage;
   // going to replace with a loggedin class instead
@@ -138,7 +143,7 @@ public class ManageBookingsScreen extends Application implements EventHandler<Ac
     {
         // adding search flights pane
         if(actionEvent.getSource()==searchButton){
-            SearchFlightsScreen searchFlightsScreen = new SearchFlightsScreen();
+            SearchFlightsScreen searchFlightsScreen = new SearchFlightsScreen(login);
             searchFlightsScreen.start(new Stage());
             stage.close();
         }

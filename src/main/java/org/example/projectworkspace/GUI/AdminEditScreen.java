@@ -17,9 +17,14 @@ import javafx.geometry.Insets;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.scene.control.*;
+import org.example.projectworkspace.UserState.LoggedIn;
 
 public class AdminEditScreen extends Application implements EventHandler<ActionEvent>
 {
+    LoggedIn login;
+    AdminEditScreen(LoggedIn login){
+        this.login = login;
+    }
     Stage stage;
     TextField AdminUsername, AdminPassword;
     Button AddButton=new Button("Add");
@@ -74,7 +79,7 @@ public class AdminEditScreen extends Application implements EventHandler<ActionE
     {
         // Adding this so when admin clicks manageflights they will be sent to otherscreen
         if(actionEvent.getSource()==manageflightsbutton){
-            AdminManageFlightsScreen  admin=new AdminManageFlightsScreen();
+            AdminManageFlightsScreen  admin=new AdminManageFlightsScreen(login);
             try {
                 admin.start(new Stage());
             } catch (Exception e) {

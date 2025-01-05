@@ -43,10 +43,12 @@ public class LoginScreen extends Application implements EventHandler<ActionEvent
 
         // TextFields for Username and Password
         text1 = new TextField();
+        text1.setOnAction(this);
         text1.setPromptText("Enter your username");
         text1.setStyle("-fx-border-color: #4CAF50; -fx-border-radius: 5px; -fx-font-size: 14px;");
 
         text2 = new PasswordField();
+        text2.setOnAction(this);
         text2.setPromptText("Enter your password");
         text2.setStyle("-fx-border-color: #4CAF50; -fx-border-radius: 5px; -fx-font-size: 14px;");
 

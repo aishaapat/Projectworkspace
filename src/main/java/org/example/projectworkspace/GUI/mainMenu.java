@@ -17,6 +17,8 @@ public class mainMenu extends Application {
 
     LoggedIn loggedInUser;
 
+    mainMenu(){}
+
     mainMenu(LoggedIn loggedInUser) {
         this.loggedInUser = loggedInUser;
     }

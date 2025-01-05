@@ -13,9 +13,15 @@ import javafx.geometry.Insets;
 import javafx.scene.control.TextField;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.ComboBox;
+import org.example.projectworkspace.UserState.LoggedIn;
 
-public class SearchFlightsScreen extends Application implements EventHandler<ActionEvent> {
-
+public class SearchFlightsScreen extends Application implements EventHandler<ActionEvent>
+{
+    //adding constructors for menus that need it
+    LoggedIn login;
+    SearchFlightsScreen(LoggedIn login){
+        this.login = login;
+    }
     Label label1, label2, label3;
     TextField fromCityField, toCityField;
     DatePicker flightDate;

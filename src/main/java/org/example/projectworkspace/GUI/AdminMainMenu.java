@@ -9,13 +9,23 @@ import javafx.scene.control.Button;
 import javafx.scene.layout.GridPane;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
+import org.example.projectworkspace.UserState.LoggedIn;
 
 public class AdminMainMenu extends Application implements EventHandler<ActionEvent> {
+    LoggedIn login;
+    // adding two types of constructors just in case
+    AdminMainMenu(){}
+    AdminMainMenu(LoggedIn login){
+        this.login = login;
+    }
     
     Stage stage;
     String FirstName = "username"; // Replace with actual firstname of user
     // adding this to the top of the class because I am using eventhandler for this
     Button ManagePageButton = new Button("Manage Page");
+
+
+
 
 
     @Override
@@ -81,7 +91,7 @@ public class AdminMainMenu extends Application implements EventHandler<ActionEve
     }
     private void handleManage(ActionEvent event) throws Exception {
         System.out.println("Going to edit screen..");
-        AdminEditScreen adminEditScreen = new AdminEditScreen();
+        AdminEditScreen adminEditScreen = new AdminEditScreen(login);
         adminEditScreen.start(new Stage());
         stage.close();
     }
@@ -93,7 +103,7 @@ public class AdminMainMenu extends Application implements EventHandler<ActionEve
     @Override
     public void handle(ActionEvent actionEvent) {
         if(actionEvent.getSource()==ManagePageButton){
-            AdminEditScreen adminEditScreen = new AdminEditScreen();
+            AdminEditScreen adminEditScreen = new AdminEditScreen(login);
             try {
                 adminEditScreen.start(new Stage());
             } catch (Exception e) {
