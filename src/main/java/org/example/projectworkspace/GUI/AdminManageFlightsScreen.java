@@ -18,7 +18,7 @@ import org.example.projectworkspace.UserState.LoggedIn;
 
 public class AdminManageFlightsScreen extends Application implements EventHandler<ActionEvent>
 {
-    LoggedIn login;
+    LoggedIn login=new LoggedIn();
 
     Stage stage;
     TableView<Flight> tableView = new TableView<>();

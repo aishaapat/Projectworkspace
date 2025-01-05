@@ -21,7 +21,7 @@ import org.example.projectworkspace.UserState.LoggedIn;
 
 public class AdminEditScreen extends Application implements EventHandler<ActionEvent>
 {
-    LoggedIn login;
+    LoggedIn login=new LoggedIn();
     Stage stage;
     TextField AdminUsername, AdminPassword;
     Button AddButton=new Button("Add");

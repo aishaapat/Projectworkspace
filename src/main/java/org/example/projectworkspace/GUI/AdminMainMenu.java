@@ -13,7 +13,7 @@ import org.example.projectworkspace.UserState.LoggedIn;
 
 public class AdminMainMenu extends Application implements EventHandler<ActionEvent> {
 
-    LoggedIn login;
+    LoggedIn login=new LoggedIn();
     Stage stage;
     String FirstName = "username"; // Replace with actual firstname of user
     // adding this to the top of the class because I am using eventhandler for this

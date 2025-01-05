@@ -15,7 +15,7 @@ public class mainMenu extends Application {
 
     Stage stage;
 
-    LoggedIn loggedInUser;
+    LoggedIn loggedInUser=new LoggedIn();
 
 
     @Override
@@ -35,9 +35,9 @@ public class mainMenu extends Application {
         // I wanted to double check what their name will be etc
 
 
-
-        Text welcometitle1 = new Text("Welcome "+loggedInUser.getFirstName());
-        welcometitle1.setStyle("-fx-font-size: 20px; -fx-font-weight: bold;");
+        // we will add this when connection details work properly
+       // Text welcometitle1 = new Text("Welcome " + loggedInUser.getFirstName());
+        //welcometitle1.setStyle("-fx-font-size: 20px; -fx-font-weight: bold;");
 
         // Buttons for Manage Bookings and Logout
         Button manageBookingsButton = new Button("Manage Bookings");
@@ -51,7 +51,7 @@ public class mainMenu extends Application {
 
         // Add components to layout
         root.add(title, 0, 0, 2, 1);  // Spans 2 columns
-        root.add(welcometitle1, 0, 1, 3, 1);
+
         GridPane.setHalignment(title, javafx.geometry.HPos.CENTER); // Center the title horizontally
 
         root.add(manageBookingsButton, 0, 1);

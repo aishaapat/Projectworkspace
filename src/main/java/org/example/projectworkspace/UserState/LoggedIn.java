@@ -9,6 +9,7 @@ public class LoggedIn
     String UserName=null;
     String Password=null;
     Boolean LoggedIn=false;
+    String FirstName=null;
 
 
     public String getUserName(){
@@ -30,10 +31,11 @@ public class LoggedIn
         this.Password = Password;
     }
     public String getFirstName() {
+        this.FirstName = FirstName;
         Privateconnection database = new Privateconnection();
-        String Firstname = null;
         String query = "SELECT firstname WHERE username= ? AND password=?";
 
+        String Firstname = "null user";
         try (Connection connection = DriverManager.getConnection(database.getURL(), database.getUsername(), database.getPassword());
              PreparedStatement statement = connection.prepareStatement(query)) {
             //now we prepare the prepared statement
