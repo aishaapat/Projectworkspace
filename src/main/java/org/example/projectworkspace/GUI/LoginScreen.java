@@ -100,7 +100,7 @@ public class LoginScreen extends Application implements EventHandler<ActionEvent
             login.setUserName(username);
             login.setPassword(password);
             login.setLoggedIn(true);
-            mainMenu mainMenuScreen = new mainMenu(login);
+            mainMenu mainMenuScreen = new mainMenu();
             mainMenuScreen.start(new Stage());
             stage.close();
         } else {
