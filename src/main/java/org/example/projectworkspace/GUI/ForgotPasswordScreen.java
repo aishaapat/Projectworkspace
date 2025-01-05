@@ -1,6 +1,7 @@
 package org.example.projectworkspace.GUI;
 
 import Database.DatabaseManager;
+import Database.Privateconnection;
 import javafx.application.Application;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -83,7 +84,7 @@ public class ForgotPasswordScreen extends Application implements EventHandler<Ac
 
         if (actionEvent.getSource() == enterButton) {
             String enteredUsername = usernameField.getText();
-            String selectedQuestion = questions.getValue();
+            String selectedQuestion = questions.getValue() != null ?questions.getValue().toString() : "";
             String enteredAnswer = answer.getText();
 
             if (enteredUsername.isEmpty() || selectedQuestion == null || enteredAnswer.isEmpty()) {
@@ -101,9 +102,9 @@ public class ForgotPasswordScreen extends Application implements EventHandler<Ac
     }
 
     private String verifySecurityQuestion(String username, String question, String answer) {
-        String sql = "SELECT question, answer, password FROM users WHERE username = ?";
-        DatabaseManager dbManager = new DatabaseManager();
-        try (Connection connection = dbManager.connect();
+        String sql = "SELECT password FROM users WHERE username=? AND question=? AND answer=?";
+        Privateconnection database = new Privateconnection();
+        try (Connection connection=DriverManager.getConnection(database.getURL(), database.getUsername(), database.getPassword());
              PreparedStatement stmt = connection.prepareStatement(sql)) {
 
             if (connection == null) {
@@ -113,6 +114,8 @@ public class ForgotPasswordScreen extends Application implements EventHandler<Ac
 
             // Set the username parameter for the query
             stmt.setString(1, username);
+            stmt.setString(2, question);
+            stmt.setString(3, answer);
 
             // Execute the query and store the result
             ResultSet resultSet = stmt.executeQuery();
