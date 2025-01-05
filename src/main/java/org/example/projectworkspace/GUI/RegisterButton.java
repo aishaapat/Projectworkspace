@@ -52,6 +52,7 @@ public class RegisterButton extends Button {
         String password = registerScreen.password.getText();
         String question = registerScreen.security.getValue() != null ? registerScreen.security.getValue().toString() : "";
         String answer = registerScreen.answer.getText();
+        String type="user";
 
         if (firstName.isEmpty() || lastName.isEmpty() || username.isEmpty() || password.isEmpty() || question.isEmpty() || answer.isEmpty()) {
             Alert alert = new Alert(Alert.AlertType.WARNING);
@@ -65,8 +66,8 @@ public class RegisterButton extends Button {
         Privateconnection dbConnection = new Privateconnection();
         try (Connection connection = dbConnection.getConnection();
              PreparedStatement stmt = connection.prepareStatement(
-                     "INSERT INTO Users (FirstName, LastName, Address, ZipCode, State, Email, SSN, Username, Password, question, answer) " +
-                             "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)")) {
+                     "INSERT INTO Users (FirstName, LastName, Address, ZipCode, State, Email, SSN, Username, Password, question, answer,type) " +
+                             "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?,?)")) {
 
             stmt.setString(1, firstName);
             stmt.setString(2, lastName);
@@ -79,6 +80,7 @@ public class RegisterButton extends Button {
             stmt.setString(9, password);
             stmt.setString(10, question);
             stmt.setString(11, answer);
+            stmt.setString(12,type );
 
             stmt.executeUpdate();
             return true;
