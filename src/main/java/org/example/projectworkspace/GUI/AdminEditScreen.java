@@ -80,6 +80,7 @@ public class AdminEditScreen extends Application implements EventHandler<ActionE
         root.add(manageflightsbutton,1,5);
         stage.show();
         manageflightsbutton.setOnAction(this);
+        AddButton.setOnAction(this);
 
         // I am going to work on the delete button functions
 
@@ -145,6 +146,15 @@ public class AdminEditScreen extends Application implements EventHandler<ActionE
 
             } catch (SQLException e)
             {
+                throw new RuntimeException(e);
+            }
+
+        }
+        else if(actionEvent.getSource()==AddButton){
+            RegisterAdmin showregister=new RegisterAdmin();
+            try {
+                showregister.start(new Stage());
+            } catch (Exception e) {
                 throw new RuntimeException(e);
             }
 

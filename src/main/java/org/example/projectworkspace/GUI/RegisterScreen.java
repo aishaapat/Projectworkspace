@@ -13,7 +13,7 @@ import javafx.scene.control.TextField;
 
 public class RegisterScreen extends Application implements EventHandler<ActionEvent> {
 
-    Label title, label1, label2, label3, label4, label5, label6, label7, label8, label9, label10, label11;
+    Label title;
     TextField First, Last, address, zip, state, username, password, email, ssn, answer;
     ComboBox<String> security;
     RegisterButton register;
