@@ -17,7 +17,6 @@ public class mainMenu extends Application {
 
     LoggedIn loggedInUser;
 
-    mainMenu(){}
 
     mainMenu(LoggedIn loggedInUser) {
         this.loggedInUser = loggedInUser;
@@ -37,11 +36,11 @@ public class mainMenu extends Application {
         Text title = new Text("Main Menu");
         title.setStyle("-fx-font-size: 24px; -fx-font-weight: bold;");
         //adding log in to check if the user state stays logged in
+        // I wanted to double check what their name will be etc
 
-        String username=loggedInUser.getUserName();
 
 
-        Text welcometitle1 = new Text("Welcome "+username);
+        Text welcometitle1 = new Text("Welcome "+loggedInUser.getFirstName());
         welcometitle1.setStyle("-fx-font-size: 20px; -fx-font-weight: bold;");
 
         // Buttons for Manage Bookings and Logout

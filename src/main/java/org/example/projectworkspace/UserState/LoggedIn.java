@@ -1,5 +1,9 @@
 package org.example.projectworkspace.UserState;
 
+import Database.Privateconnection;
+
+import java.sql.*;
+
 public class LoggedIn
 {
     String UserName=null;
@@ -25,4 +29,26 @@ public class LoggedIn
     public void setPassword(String Password){
         this.Password = Password;
     }
+    public String getFirstName() {
+        Privateconnection database = new Privateconnection();
+        String Firstname = null;
+        String query = "SELECT firstname WHERE username= ? AND password=?";
+
+        try (Connection connection = DriverManager.getConnection(database.getURL(), database.getUsername(), database.getPassword());
+             PreparedStatement statement = connection.prepareStatement(query)) {
+            //now we prepare the prepared statement
+            statement.setString(1, UserName);
+            statement.setString(2, Password);
+            ResultSet rs = statement.executeQuery();
+            //
+            if (rs.next()) {
+                Firstname = rs.getString("firstname");
+            }
+            rs.close();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        return Firstname;
+    }
+
 }
