@@ -22,10 +22,7 @@ import org.example.projectworkspace.UserState.LoggedIn;
 
 public class ManageBookingsScreen extends Application implements EventHandler<ActionEvent> {
     LoggedIn login;
-    ManageBookingsScreen(){}
-    ManageBookingsScreen(LoggedIn login){
-        this.login = login;
-    }
+
 
     Stage stage;
   // going to replace with a loggedin class instead
@@ -85,8 +82,7 @@ public class ManageBookingsScreen extends Application implements EventHandler<Ac
         Button backButton = new Button("Back to Main Menu");
         backButton.setOnAction(e -> {
             // Navigate to Main Menu screen (you can replace this with actual navigation logic)
-            LoggedIn login = new LoggedIn();
-            mainMenu mainMenuScreen = new mainMenu(login);
+            mainMenu mainMenuScreen = new mainMenu();
             mainMenuScreen.start(new Stage());
             stage.close(); // Close the current screen (ManageBookingsScreen)
         });
@@ -143,7 +139,7 @@ public class ManageBookingsScreen extends Application implements EventHandler<Ac
     {
         // adding search flights pane
         if(actionEvent.getSource()==searchButton){
-            SearchFlightsScreen searchFlightsScreen = new SearchFlightsScreen(login);
+            SearchFlightsScreen searchFlightsScreen = new SearchFlightsScreen();
             searchFlightsScreen.start(new Stage());
             stage.close();
         }

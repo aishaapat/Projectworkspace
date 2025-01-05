@@ -18,10 +18,6 @@ public class mainMenu extends Application {
     LoggedIn loggedInUser;
 
 
-    mainMenu(LoggedIn loggedInUser) {
-        this.loggedInUser = loggedInUser;
-    }
-
     @Override
     public void start(Stage stage) {
         this.stage = stage;

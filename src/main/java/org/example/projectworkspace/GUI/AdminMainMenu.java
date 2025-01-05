@@ -12,13 +12,8 @@ import javafx.stage.Stage;
 import org.example.projectworkspace.UserState.LoggedIn;
 
 public class AdminMainMenu extends Application implements EventHandler<ActionEvent> {
+
     LoggedIn login;
-    // adding two types of constructors just in case
-    AdminMainMenu(){}
-    AdminMainMenu(LoggedIn login){
-        this.login = login;
-    }
-    
     Stage stage;
     String FirstName = "username"; // Replace with actual firstname of user
     // adding this to the top of the class because I am using eventhandler for this

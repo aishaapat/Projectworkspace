@@ -19,9 +19,7 @@ import org.example.projectworkspace.UserState.LoggedIn;
 public class AdminManageFlightsScreen extends Application implements EventHandler<ActionEvent>
 {
     LoggedIn login;
-    AdminManageFlightsScreen(LoggedIn login){
-        this.login = login;
-    }
+
     Stage stage;
     TableView<Flight> tableView = new TableView<>();
     //adding all the buttons for this pane
@@ -92,7 +90,7 @@ public class AdminManageFlightsScreen extends Application implements EventHandle
     public void handle(ActionEvent actionEvent)
     {
         if(actionEvent.getSource()==backbutton){
-            AdminEditScreen adminedit=new AdminEditScreen(login);
+            AdminEditScreen adminedit=new AdminEditScreen();
             try {
                 adminedit.start(new Stage());
             } catch (Exception e) {
