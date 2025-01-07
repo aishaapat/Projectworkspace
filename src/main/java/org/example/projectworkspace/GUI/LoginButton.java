@@ -1,10 +1,13 @@
 package org.example.projectworkspace.GUI;
 
 import Database.DatabaseManager;
+import Database.Privateconnection;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 
 import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 
 public class LoginButton extends Button {
@@ -40,55 +43,28 @@ public class LoginButton extends Button {
     public boolean performLogin() {
         String enteredUsername = text1.getText(); // Get username from text1
         String enteredPassword = text2.getText(); // Get password from text2
+        Boolean logincomplete=false;
 
-        DatabaseManager dbManager = new DatabaseManager();
-        Connection connection = dbManager.connect();
+        String query = "SELECT username, password FROM users WHERE username = ? AND password = ?";
 
-        if (connection == null) {
-            System.out.println("Connection failed");
-            return false;
-        }
-
-        try {
-            String sql = "SELECT password, type FROM users WHERE username = ?";
-
-            // var recognizes the prepared statement as an object of the prepared statement class
-
-            var preparedStatement = connection.prepareStatement(sql);
+        Privateconnection connect = new Privateconnection();
+        try(Connection dbconnect=connect.getConnection();
+            PreparedStatement preparedStatement = dbconnect.prepareStatement(query))
+        {
             preparedStatement.setString(1, enteredUsername);
+            preparedStatement.setString(2, enteredPassword);
+            ResultSet resultSet = preparedStatement.executeQuery();
+            if (resultSet.next())
+            {
+                if(resultSet.getString("username").equals(enteredUsername) && resultSet.getString("password").equals(enteredPassword)) logincomplete=true;
 
-            var resultSet = preparedStatement.executeQuery();
-
-            if (resultSet.next()) {
-                // Finds the password from the database
-                String storedPassword = resultSet.getString("password");
-                // Check if the entered password matches the one stored
-                if (enteredPassword.equals(storedPassword)) {
-                    String type = resultSet.getString("type");
-                    System.out.println("User type: " + type);
-                    return true; // Login successful
-                } else {
-                    System.out.println("Incorrect password.");
-                    return false; // Login failed due to incorrect password
-                }
-            } else {
-                System.out.println("Username not found");
-                return false; // Username not found
             }
+
+
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
         }
 
-        catch (SQLException e) {
-            System.out.println("Error during login: " + e.getMessage());
-            e.printStackTrace();
-            return false;
-        } finally {
-            try {
-                if (connection != null) {
-                    connection.close();
-                }
-            } catch (SQLException e) {
-                System.out.println("Error closing the connection: " + e.getMessage());
-            }
-        }
+        return logincomplete;
     }
 }
