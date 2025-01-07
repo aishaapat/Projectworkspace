@@ -11,6 +11,7 @@ public class LoggedIn
     Boolean LoggedIn=false;
     String FirstName=null;
     String type=null;
+    int userID=0;
 
 
     public String getUserName(){
@@ -74,6 +75,29 @@ public class LoggedIn
             throw new RuntimeException(e);
         }
         return type;
+
+    }
+    public int getUserID()
+    {
+        this.userID = userID;
+        Privateconnection database = new Privateconnection();
+        String query = "SELECT id FROM users WHERE username= ? AND password=?";
+
+        try (Connection connection = DriverManager.getConnection(database.getURL(), database.getUsername(), database.getPassword());
+             PreparedStatement statement = connection.prepareStatement(query)) {
+            //now we prepare the prepared statement
+            statement.setString(1, UserName);
+            statement.setString(2, Password);
+            ResultSet rs = statement.executeQuery();
+            //
+            if (rs.next()) {
+                type = rs.getString("id");
+            }
+            rs.close();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        return userID;
 
     }
 }
