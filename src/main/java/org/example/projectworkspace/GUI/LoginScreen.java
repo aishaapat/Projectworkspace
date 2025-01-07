@@ -105,7 +105,7 @@ public class LoginScreen extends Application implements EventHandler<ActionEvent
             //update got it to work
             if("user".equals(login.getType()) || login.getType() == null){
                 try{
-                mainMenu main= new mainMenu();
+                mainMenu main= new mainMenu(login);
                 main.start(new Stage());
                 } catch (Exception e) {
                     throw new RuntimeException(e);

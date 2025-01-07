@@ -11,11 +11,20 @@ import javafx.stage.Stage;
 import javafx.scene.text.Text;
 import org.example.projectworkspace.UserState.LoggedIn;
 
-public class mainMenu extends Application {
+public class mainMenu extends Application
+{
+    private final LoggedIn loggedIn;
+
+    mainMenu(LoggedIn loggedIn)
+    {
+        this.loggedIn=loggedIn;
+
+    }
 
     Stage stage;
 
-    LoggedIn loggedInUser=new LoggedIn();
+
+    String firstname;
 
 
     @Override
@@ -27,12 +36,13 @@ public class mainMenu extends Application {
         root.setAlignment(Pos.CENTER);
         root.setVgap(20);
         root.setHgap(10);
-
-        // Title
         Text title = new Text("Main Menu");
         title.setStyle("-fx-font-size: 24px; -fx-font-weight: bold;");
         //adding log in to check if the user state stays logged in
         // I wanted to double check what their name will be etc
+        Text name = new Text("Welcome "+loggedIn.getFirstName());
+        name.setStyle("-fx-font-size: 12px; -fx-font-weight: bold;");
+        root.add(name,1,1, 1, 1);
 
 
         // we will add this when connection details work properly
@@ -54,8 +64,8 @@ public class mainMenu extends Application {
 
         GridPane.setHalignment(title, javafx.geometry.HPos.CENTER); // Center the title horizontally
 
-        root.add(manageBookingsButton, 0, 1);
-        root.add(logoutButton, 1, 1);
+        root.add(manageBookingsButton, 0, 2);
+        root.add(logoutButton, 1, 2);
 
         // Set up the scene and stage
         Scene scene = new Scene(root, 400, 200);
@@ -75,9 +85,9 @@ public class mainMenu extends Application {
     // Handle Logout button click
     private void handleLogout(ActionEvent event) {
         //adding logic where loggedin state will be closed
-        loggedInUser.setLoggedIn(false);
-        loggedInUser.setUserName(null);
-        loggedInUser.setPassword(null);
+        loggedIn.setLoggedIn(false);
+        loggedIn.setUserName(null);
+        loggedIn.setPassword(null);
         // Close the current screen and go back to the login screen
         System.out.println("Logging out...");
         LoginScreen loginScreen = new LoginScreen(); // Replace with your Login screen class

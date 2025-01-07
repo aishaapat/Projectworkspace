@@ -82,7 +82,7 @@ public class ManageBookingsScreen extends Application implements EventHandler<Ac
         Button backButton = new Button("Back to Main Menu");
         backButton.setOnAction(e -> {
             // Navigate to Main Menu screen (you can replace this with actual navigation logic)
-            mainMenu mainMenuScreen = new mainMenu();
+            mainMenu mainMenuScreen = new mainMenu(login);
             mainMenuScreen.start(new Stage());
             stage.close(); // Close the current screen (ManageBookingsScreen)
         });
