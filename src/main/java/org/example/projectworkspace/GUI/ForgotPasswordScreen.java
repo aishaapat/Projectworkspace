@@ -107,10 +107,6 @@ public class ForgotPasswordScreen extends Application implements EventHandler<Ac
         try (Connection connection=DriverManager.getConnection(database.getURL(), database.getUsername(), database.getPassword());
              PreparedStatement stmt = connection.prepareStatement(sql)) {
 
-            if (connection == null) {
-                System.out.println("Connection failed");
-                return null; // no password to be found if the connection fails
-            }
 
             // Set the username parameter for the query
             stmt.setString(1, username);
