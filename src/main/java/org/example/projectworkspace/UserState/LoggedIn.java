@@ -10,6 +10,7 @@ public class LoggedIn
     String Password=null;
     Boolean LoggedIn=false;
     String FirstName=null;
+    String type=null;
 
 
     public String getUserName(){
@@ -30,12 +31,12 @@ public class LoggedIn
     public void setPassword(String Password){
         this.Password = Password;
     }
-    public String getFirstName() {
+    public String getFirstName()
+    {
         this.FirstName = FirstName;
         Privateconnection database = new Privateconnection();
-        String query = "SELECT firstname WHERE username= ? AND password=?";
+        String query = "SELECT firstname FROM users WHERE username= ? AND password=?";
 
-        String Firstname = "null user";
         try (Connection connection = DriverManager.getConnection(database.getURL(), database.getUsername(), database.getPassword());
              PreparedStatement statement = connection.prepareStatement(query)) {
             //now we prepare the prepared statement
@@ -44,13 +45,35 @@ public class LoggedIn
             ResultSet rs = statement.executeQuery();
             //
             if (rs.next()) {
-                Firstname = rs.getString("firstname");
+                FirstName = rs.getString("firstname");
             }
             rs.close();
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
-        return Firstname;
+        return FirstName;
     }
+    public String getType()
+    {
+        this.type = type;
+        Privateconnection database = new Privateconnection();
+        String query = "SELECT type FROM users WHERE username= ? AND password=?";
 
+        try (Connection connection = DriverManager.getConnection(database.getURL(), database.getUsername(), database.getPassword());
+             PreparedStatement statement = connection.prepareStatement(query)) {
+            //now we prepare the prepared statement
+            statement.setString(1, UserName);
+            statement.setString(2, Password);
+            ResultSet rs = statement.executeQuery();
+            //
+            if (rs.next()) {
+                type = rs.getString("type");
+            }
+            rs.close();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        return type;
+
+    }
 }

@@ -100,9 +100,27 @@ public class LoginScreen extends Application implements EventHandler<ActionEvent
             login.setUserName(username);
             login.setPassword(password);
             login.setLoggedIn(true);
-            mainMenu mainMenuScreen = new mainMenu();
-            mainMenuScreen.start(new Stage());
-            stage.close();
+            System.out.println(login.getType());
+            //I am having issues with selecting the type from these I will find a way to get it to work
+            //update got it to work
+            if("user".equals(login.getType()) || login.getType() == null){
+                try{
+                mainMenu main= new mainMenu();
+                main.start(new Stage());
+                } catch (Exception e) {
+                    throw new RuntimeException(e);
+                }
+                stage.close();
+            }
+            else if("admin".equals(login.getType())){
+                try {
+                    AdminMainMenu adminMainMenu = new AdminMainMenu();
+                    adminMainMenu.start(new Stage());
+                } catch (Exception e) {
+                    throw new RuntimeException(e);
+                }
+                stage.close();
+            }
         } else {
             System.out.println("Login Failed.");
             // Really cool you can make an error pop up with an error icon using the type
@@ -152,4 +170,5 @@ public class LoginScreen extends Application implements EventHandler<ActionEvent
         }
 
     }
+
 }

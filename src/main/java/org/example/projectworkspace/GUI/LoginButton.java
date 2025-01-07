@@ -46,7 +46,7 @@ public class LoginButton extends Button {
         Boolean logincomplete=false;
 
         String query = "SELECT username, password FROM users WHERE username = ? AND password = ?";
-
+        // changed the log in stuff to a private connection thing here
         Privateconnection connect = new Privateconnection();
         try(Connection dbconnect=connect.getConnection();
             PreparedStatement preparedStatement = dbconnect.prepareStatement(query))
