@@ -10,6 +10,7 @@ import javafx.scene.control.*;
 import javafx.scene.layout.GridPane;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
+import org.example.projectworkspace.UserState.LoggedIn;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -17,18 +18,25 @@ import java.sql.SQLException;
 
 public class AddFlightsScreen extends Application implements EventHandler<ActionEvent>
 {
+    private LoggedIn login;
+    AddFlightsScreen(LoggedIn login){
+        this.login = login;
+    }
     Stage stage;
     EnterButton enterButton= new EnterButton();
     TextField  fromCityField, toCityField,capacity,currentcapacity,takeoff,landing;
     DatePicker flightDate;
     Label label1,label2,label3,label4,label5,label6,label7,label8;
     ComboBox<String> status;
+    BackButton back=new BackButton();
 
 
 
         @Override
     public void start(Stage stage) throws Exception
     {
+
+
         this.stage = stage;
 
         // Create the layout
@@ -44,7 +52,7 @@ public class AddFlightsScreen extends Application implements EventHandler<Action
         label1 = new Label("From:");
         label2 = new Label("To:");
         label3 = new Label("Date:");
-        Scene scene = new Scene(root, 500, 500);
+        Scene scene = new Scene(root, 600, 600);
         root.add(title, 0, 0);
         root.add(fromCityField, 1, 1);
         root.add(toCityField, 1, 2);
@@ -85,6 +93,8 @@ public class AddFlightsScreen extends Application implements EventHandler<Action
         //add enter button
 
         root.add(enterButton,1,10);
+        root.add(back,1,11);
+        back.setOnAction(this);
         root.setAlignment(Pos.CENTER);
         stage.setResizable(false);
         stage.setTitle("Admin Only- Add Flights");
@@ -106,10 +116,20 @@ public class AddFlightsScreen extends Application implements EventHandler<Action
         String takeoffValue=flightDateValue+" "+takeoff.getText() ;
         String landingValue=flightDateValue+" "+landing.getText();
         String check = status.getValue();
-        
+        if(actionEvent.getSource() == back) {
+            AdminManageFlightsScreen admin = new AdminManageFlightsScreen(login);
+            try {
+                admin.start(new Stage());
+                stage.close();
+            } catch (Exception e) {
+                throw new RuntimeException(e);
+            }
+        }
 
-        if(actionEvent.getSource() == enterButton) {
-            if (fromCity.isEmpty() | toCity.isEmpty() | flightDateValue.isEmpty()| capacityValue<0 | currentcapacityValue<0 | takeoffValue.isEmpty() | landingValue.isEmpty())
+        else if(actionEvent.getSource() == enterButton)
+        {
+
+             if (fromCity.isEmpty() | toCity.isEmpty() | flightDateValue.isEmpty()| capacityValue<0 | currentcapacityValue<0 | takeoffValue.isEmpty() | landingValue.isEmpty())
             {
                 Alert alert = new Alert(Alert.AlertType.WARNING);
                 alert.setTitle("Warning");
@@ -141,6 +161,7 @@ public class AddFlightsScreen extends Application implements EventHandler<Action
                             alert.setHeaderText(null);
                             alert.setContentText("Flight added successfully!");
                             alert.showAndWait();
+
                         }
                         else {
                             Alert alert = new Alert(Alert.AlertType.ERROR);
@@ -150,11 +171,11 @@ public class AddFlightsScreen extends Application implements EventHandler<Action
                             alert.showAndWait();
                         }
 
-                    } catch (SQLException e) {
+                    } catch (SQLException e)
+                    {
                         System.out.println(e.getMessage());
                     }
             }
-
 
         }
 

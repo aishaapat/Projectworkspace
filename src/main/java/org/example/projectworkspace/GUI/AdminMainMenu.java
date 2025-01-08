@@ -89,7 +89,7 @@ public class AdminMainMenu extends Application implements EventHandler<ActionEve
     }
     private void handleManage(ActionEvent event) throws Exception {
         System.out.println("Going to edit screen..");
-        AdminEditScreen adminEditScreen = new AdminEditScreen();
+        AdminEditScreen adminEditScreen = new AdminEditScreen(login);
         adminEditScreen.start(new Stage());
         stage.close();
     }
@@ -101,7 +101,7 @@ public class AdminMainMenu extends Application implements EventHandler<ActionEve
     @Override
     public void handle(ActionEvent actionEvent) {
         if(actionEvent.getSource()==ManagePageButton){
-            AdminEditScreen adminEditScreen = new AdminEditScreen();
+            AdminEditScreen adminEditScreen = new AdminEditScreen(login);
             try {
                 adminEditScreen.start(new Stage());
             } catch (Exception e) {

@@ -61,7 +61,6 @@ public class ManageBookingsScreen extends Application implements EventHandler<Ac
         // Table to display booked flights
         TableView<Flight> tableView = new TableView<>();
         userBookings(login.getUserID());
-        System.out.println(login.getUserID());
         tableView.setItems(bookedFlights);
 
         // Define columns for flight details

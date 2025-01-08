@@ -6,6 +6,7 @@ module org.example.projectworkspace {
     requires org.kordamp.bootstrapfx.core;
     requires java.sql;
     requires io.github.cdimascio.dotenv.java;
+    requires mysql.connector.j;
 
     exports org.example.projectworkspace to javafx.fxml;
     exports org.example.projectworkspace.GUI to javafx.graphics, javafx.fxml;

@@ -28,6 +28,9 @@ import java.sql.SQLException;
 public class AdminEditScreen extends Application implements EventHandler<ActionEvent>
 {
     private LoggedIn login;
+    AdminEditScreen(LoggedIn login){
+        this.login = login;
+    }
 
     Stage stage;
     TextField AdminUsername, AdminPassword;
@@ -97,7 +100,7 @@ public class AdminEditScreen extends Application implements EventHandler<ActionE
         // Adding this so when admin clicks manageflights they will be sent to otherscreen
         if(actionEvent.getSource()==manageflightsbutton)
         {
-            AdminManageFlightsScreen  admin=new AdminManageFlightsScreen();
+            AdminManageFlightsScreen  admin=new AdminManageFlightsScreen(login);
             try {
                 admin.start(new Stage());
             } catch (Exception e) {
