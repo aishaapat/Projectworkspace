@@ -19,6 +19,9 @@ public class SearchFlightsScreen extends Application implements EventHandler<Act
 {
     //adding constructors for menus that need it
    private LoggedIn login;
+   SearchFlightsScreen(LoggedIn login){
+       this.login = login;
+   }
 
     Label label1, label2, label3;
     TextField fromCityField, toCityField;

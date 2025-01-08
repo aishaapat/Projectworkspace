@@ -134,6 +134,9 @@ public class ManageBookingsScreen extends Application implements EventHandler<Ac
     private void handleDeleteFlight(TableView<Flight> tableView) {
         Flight selectedFlight = tableView.getSelectionModel().getSelectedItem();
 
+        //assign the query here
+        String query="DELETE FROM bookings WHERE fid=? and uid=?";
+
         if (selectedFlight == null) {
             // Show an error alert if no flight is selected
             Alert alert = new Alert(AlertType.WARNING);
@@ -142,14 +145,46 @@ public class ManageBookingsScreen extends Application implements EventHandler<Ac
             alert.setContentText("Please select a flight to delete.");
             alert.showAndWait();
         } else {
-            // Here, you would remove the flight from the database and the list
-            bookedFlights.remove(selectedFlight);
-            // Show a confirmation alert
-            Alert alert = new Alert(AlertType.INFORMATION);
-            alert.setTitle("Flight Deleted");
-            alert.setHeaderText("Your flight has been deleted.");
-            alert.setContentText("You have successfully deleted the flight.");
-            alert.showAndWait();
+            //get login id for the delete query
+            int UserID = login.getUserID();
+            //get flight number
+            int flightID= selectedFlight.getNumber();
+
+
+            //I am adding the database stuff  now
+            Privateconnection db=new Privateconnection();
+            try(Connection connection =db.getConnection();
+            PreparedStatement stmt=connection.prepareStatement(query)){
+                stmt.setInt(1, flightID);
+                stmt.setInt(2, UserID);
+
+                int rows= stmt.executeUpdate();
+
+                if(rows>0){
+                    // Show a confirmation alert
+                    bookedFlights.remove(selectedFlight);
+                    Alert alert = new Alert(AlertType.INFORMATION);
+                    alert.setTitle("Flight Deleted");
+                    alert.setHeaderText("Your flight has been deleted.");
+                    alert.setContentText("You have successfully deleted the flight.");
+                    alert.showAndWait();
+                }
+                else{
+
+                    Alert alert = new Alert(AlertType.ERROR);
+                    alert.setTitle("Flight Deletion Failed");
+                    alert.setHeaderText(null);
+                    alert.setContentText("Something went wrong.");
+                    alert.showAndWait();
+                }
+
+
+            }
+            catch (SQLException e)
+            {
+                System.out.println(e.getMessage());
+            }
+
         }
     }
 
@@ -163,7 +198,7 @@ public class ManageBookingsScreen extends Application implements EventHandler<Ac
     {
         // adding search flights pane
         if(actionEvent.getSource()==searchButton){
-            SearchFlightsScreen searchFlightsScreen = new SearchFlightsScreen();
+            SearchFlightsScreen searchFlightsScreen = new SearchFlightsScreen(login);
             searchFlightsScreen.start(new Stage());
             stage.close();
         }

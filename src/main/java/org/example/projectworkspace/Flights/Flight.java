@@ -1,11 +1,13 @@
 package org.example.projectworkspace.Flights;
 
-import java.sql.Timestamp;
+import Database.Privateconnection;
+
+import java.sql.*;
 import java.util.Date;
 
 public class Flight {
 
-    private final int number;
+    final private int  number;
     private String destination; // Destination city
     private String departureLocation; // Departure city or airport
     private int capacity; // Total seating capacity
@@ -104,4 +106,5 @@ public class Flight {
                 ", capacity=" + capacity + ", currentCapacity=" + currentCapacity + ", takeoff=" + takeoff +
                 ", landing=" + landing + ", date=" + date + ", status=" + status + "]";
     }
+
 }
