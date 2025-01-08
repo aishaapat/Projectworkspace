@@ -138,12 +138,24 @@ public class AdminManageFlightsScreen extends Application implements EventHandle
                 alert.showAndWait();
             }
             else{
-                //set logic and query for deleting the flight
+                //I realized I need to delete it from bookings first
+                String bookingquery="DELETE FROM bookings WHERE fid=?";
                 int flightnum=selectedFlight.getNumber();
+                Privateconnection db=new Privateconnection();
+                try(Connection connection =db.getConnection();
+                    PreparedStatement stmt=connection.prepareStatement(bookingquery)){
+                    stmt.setInt(1, flightnum);
+                    stmt.executeUpdate();
+                } catch (SQLException e) {
+                    throw new RuntimeException(e);
+                }
+
+                //set logic and query for deleting the flight
+
                 //assign the query here
                 String query="DELETE FROM Flights WHERE number=?";
                 //set connection
-                Privateconnection db=new Privateconnection();
+
                 try(Connection connection =db.getConnection();
                     PreparedStatement stmt=connection.prepareStatement(query)){
                     stmt.setInt(1, flightnum);
