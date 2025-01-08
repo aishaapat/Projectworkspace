@@ -27,7 +27,8 @@ import java.sql.SQLException;
 
 public class AdminEditScreen extends Application implements EventHandler<ActionEvent>
 {
-    LoggedIn login=new LoggedIn();
+    private LoggedIn login;
+
     Stage stage;
     TextField AdminUsername, AdminPassword;
     Button AddButton=new Button("Add");
@@ -105,7 +106,7 @@ public class AdminEditScreen extends Application implements EventHandler<ActionE
             stage.close();
         }
         else if(actionEvent.getSource()==back){
-            AdminMainMenu admin=new AdminMainMenu();
+            AdminMainMenu admin=new AdminMainMenu(login);
             admin.start(new Stage());
             stage.close();
         }

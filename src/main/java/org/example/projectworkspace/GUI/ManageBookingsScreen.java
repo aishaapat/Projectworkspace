@@ -1,6 +1,9 @@
 package org.example.projectworkspace.GUI;
 
+import Database.Privateconnection;
 import javafx.application.Application;
+import javafx.beans.property.SimpleIntegerProperty;
+import javafx.beans.property.SimpleStringProperty;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Pos;
@@ -18,10 +21,19 @@ import javafx.scene.control.Alert.AlertType;
 import javafx.geometry.Insets;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import org.example.projectworkspace.Flights.Flight;
 import org.example.projectworkspace.UserState.LoggedIn;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+
 public class ManageBookingsScreen extends Application implements EventHandler<ActionEvent> {
-    LoggedIn login=new LoggedIn();
+    private LoggedIn login;
+    ManageBookingsScreen(LoggedIn login) {
+        this.login = login;
+    }
 
 
     Stage stage;
@@ -30,11 +42,7 @@ public class ManageBookingsScreen extends Application implements EventHandler<Ac
 
 
     // Sample data for booked flights (you can replace this with real database queries)
-    ObservableList<Flight> bookedFlights = FXCollections.observableArrayList(
-            new Flight("101", "New York", "London", "2024-12-25", "18:00"),
-            new Flight("102", "Los Angeles", "Tokyo", "2024-12-26", "09:00"),
-            new Flight("103", "Chicago", "Paris", "2024-12-27", "14:00")
-    );
+    ObservableList<Flight> bookedFlights = FXCollections.observableArrayList();
 
     @Override
     public void start(Stage stage) {
@@ -47,30 +55,43 @@ public class ManageBookingsScreen extends Application implements EventHandler<Ac
         root.setHgap(10);
         root.setPadding(new Insets(20, 20, 20, 20));
 
-        Label title = new Label("Your Booked Flights");
+        Label title = new Label("Your Booked Flights "+login.getFirstName());
         title.setStyle("-fx-font-size: 24px; -fx-font-weight: bold;");
 
         // Table to display booked flights
         TableView<Flight> tableView = new TableView<>();
+        userBookings(login.getUserID());
+        System.out.println(login.getUserID());
         tableView.setItems(bookedFlights);
 
         // Define columns for flight details
-        TableColumn<Flight, String> flightIdCol = new TableColumn<>("Flight ID");
-        flightIdCol.setCellValueFactory(new PropertyValueFactory<>("flightId"));
+
 
         TableColumn<Flight, String> fromCityCol = new TableColumn<>("From City");
-        fromCityCol.setCellValueFactory(new PropertyValueFactory<>("fromCity"));
+        fromCityCol.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getDepartureLocation()));
 
         TableColumn<Flight, String> toCityCol = new TableColumn<>("To City");
-        toCityCol.setCellValueFactory(new PropertyValueFactory<>("toCity"));
+        toCityCol.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getDestination()));
+
+        TableColumn<Flight, String> capacityCol = new TableColumn<>("Capacity");
+        capacityCol.setCellValueFactory(cellData -> new SimpleStringProperty(String.valueOf(cellData.getValue().getCapacity())));
 
         TableColumn<Flight, String> dateCol = new TableColumn<>("Date");
-        dateCol.setCellValueFactory(new PropertyValueFactory<>("date"));
+        dateCol.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getDate().toString()));
 
         TableColumn<Flight, String> timeCol = new TableColumn<>("Time");
-        timeCol.setCellValueFactory(new PropertyValueFactory<>("time"));
+        timeCol.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getTakeoff().toString()));
 
-        tableView.getColumns().addAll(flightIdCol, fromCityCol, toCityCol, dateCol, timeCol);
+        TableColumn<Flight, String> landingCol = new TableColumn<>("Landing Time");
+        landingCol.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getLanding().toString()));
+
+        TableColumn<Flight, String> flightstatus = new TableColumn<>("Status");
+        flightstatus.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getStatus()));
+
+
+        tableView.getColumns().addAll( fromCityCol, toCityCol,capacityCol, dateCol, timeCol,landingCol,flightstatus);
+
+
 
         // Delete button action
         Button deleteButton = new Button("Delete Flight");
@@ -80,11 +101,20 @@ public class ManageBookingsScreen extends Application implements EventHandler<Ac
 
         // Back to Main Menu Button
         Button backButton = new Button("Back to Main Menu");
-        backButton.setOnAction(e -> {
-            // Navigate to Main Menu screen (you can replace this with actual navigation logic)
-            mainMenu mainMenuScreen = new mainMenu(login);
-            mainMenuScreen.start(new Stage());
-            stage.close(); // Close the current screen (ManageBookingsScreen)
+        backButton.setOnAction(e ->
+        {
+            if("user".equals(login.getType()) || login.getType() == null) {
+                mainMenu main = new mainMenu(login);
+                main.start(new Stage());
+
+                stage.close();
+            }
+            else if("admin".equals(login.getType())){
+
+                AdminMainMenu adminMainMenu = new AdminMainMenu(login);
+                adminMainMenu.start(new Stage());
+                stage.close();
+            }
         });
 
         // Add components to layout
@@ -123,12 +153,6 @@ public class ManageBookingsScreen extends Application implements EventHandler<Ac
         }
     }
 
-    // Handle navigating to the search flights screen
-    private void handleSearchFlights(ActionEvent event) {
-        // You can navigate to the search screen (use a new stage or change scene)
-        System.out.println("Navigating to Search Flights screen...");
-        // Here you would switch to your search screen
-    }
 
     public static void main(String[] args) {
         launch(args);
@@ -145,61 +169,44 @@ public class ManageBookingsScreen extends Application implements EventHandler<Ac
         }
 
     }
-}
+    private void userBookings(int userID) {
 
-class Flight {
-    private String flightId;
-    private String fromCity;
-    private String toCity;
-    private String date;
-    private String time;
+        String query="SELECT f.number ,f.destination,f.departureLocation,f.capacity,f.takeoff,f.landing,f.date,f.status FROM bookings b " +
+                "INNER JOIN flights f on b.fid=f.number WHERE b.uid=?";
+        Privateconnection db=new Privateconnection();
+        try (Connection connection=db.getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(query);)
+        {
+            preparedStatement.setInt(1,userID);
+            ResultSet rs=preparedStatement.executeQuery();
+            // clearing the table first
+            bookedFlights.clear();
 
-    public Flight(String flightId, String fromCity, String toCity, String date, String time) {
-        this.flightId = flightId;
-        this.fromCity = fromCity;
-        this.toCity = toCity;
-        this.date = date;
-        this.time = time;
-    }
+            while(rs.next()){
+                Flight flight=new Flight(rs.getInt("number"),
+                        rs.getString("destination"),
+                        rs.getString("departureLocation"),
+                        rs.getInt("capacity"),
+                        rs.getTimestamp("takeoff"),
+                        rs.getTimestamp("landing"),
+                        rs.getDate("date"),
+                        rs.getString("status"));
+                flight.toString();
+                bookedFlights.add(flight);
 
-    // Getters and Setters
-    public String getFlightId() {
-        return flightId;
-    }
 
-    public void setFlightId(String flightId) {
-        this.flightId = flightId;
-    }
 
-    public String getFromCity() {
-        return fromCity;
-    }
-
-    public void setFromCity(String fromCity) {
-        this.fromCity = fromCity;
-    }
-
-    public String getToCity() {
-        return toCity;
-    }
-
-    public void setToCity(String toCity) {
-        this.toCity = toCity;
-    }
-
-    public String getDate() {
-        return date;
-    }
-
-    public void setDate(String date) {
-        this.date = date;
-    }
-
-    public String getTime() {
-        return time;
-    }
-
-    public void setTime(String time) {
-        this.time = time;
+            }
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        }
     }
 }
+
+
+
+
+
+
+
+

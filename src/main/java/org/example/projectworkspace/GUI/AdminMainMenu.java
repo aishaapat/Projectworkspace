@@ -13,7 +13,10 @@ import org.example.projectworkspace.UserState.LoggedIn;
 
 public class AdminMainMenu extends Application implements EventHandler<ActionEvent> {
 
-    LoggedIn login=new LoggedIn();
+    private LoggedIn login;
+    AdminMainMenu(LoggedIn login) {
+        this.login = login;
+    }
     Stage stage;
     String FirstName = "username"; // Replace with actual firstname of user
     // adding this to the top of the class because I am using eventhandler for this
@@ -71,7 +74,7 @@ public class AdminMainMenu extends Application implements EventHandler<ActionEve
     // Handle Manage Bookings button click
     private void handleManageBookings(ActionEvent event) {
         // Open the Manage Bookings screen
-        ManageBookingsScreen manageBookingsScreen = new ManageBookingsScreen();
+        ManageBookingsScreen manageBookingsScreen = new ManageBookingsScreen(login);
         manageBookingsScreen.start(new Stage()); // Open Manage Bookings in a new stage
         stage.close(); // Close the current Main Menu screen
     }

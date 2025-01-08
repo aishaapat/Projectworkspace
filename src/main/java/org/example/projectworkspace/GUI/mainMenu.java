@@ -77,7 +77,7 @@ public class mainMenu extends Application
     // Handle Manage Bookings button click
     private void handleManageBookings(ActionEvent event) {
         // Open the Manage Bookings screen
-        ManageBookingsScreen manageBookingsScreen = new ManageBookingsScreen();
+        ManageBookingsScreen manageBookingsScreen = new ManageBookingsScreen(loggedIn);
         manageBookingsScreen.start(new Stage()); // Open Manage Bookings in a new stage
         stage.close(); // Close the current Main Menu screen
     }

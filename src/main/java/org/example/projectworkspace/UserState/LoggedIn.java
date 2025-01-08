@@ -91,7 +91,7 @@ public class LoggedIn
             ResultSet rs = statement.executeQuery();
             //
             if (rs.next()) {
-                type = rs.getString("id");
+                userID = rs.getInt("id");
             }
             rs.close();
         } catch (SQLException e) {
@@ -100,4 +100,5 @@ public class LoggedIn
         return userID;
 
     }
+
 }

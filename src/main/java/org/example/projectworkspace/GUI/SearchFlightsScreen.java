@@ -18,7 +18,7 @@ import org.example.projectworkspace.UserState.LoggedIn;
 public class SearchFlightsScreen extends Application implements EventHandler<ActionEvent>
 {
     //adding constructors for menus that need it
-    LoggedIn login;
+   private LoggedIn login;
 
     Label label1, label2, label3;
     TextField fromCityField, toCityField;
@@ -136,7 +136,7 @@ public class SearchFlightsScreen extends Application implements EventHandler<Act
     @Override
     public void handle(ActionEvent actionEvent) {
         if(actionEvent.getSource()==back){
-            ManageBookingsScreen manageBookingsScreen = new ManageBookingsScreen();
+            ManageBookingsScreen manageBookingsScreen = new ManageBookingsScreen(login);
             manageBookingsScreen.start(new Stage());
             stage.close();
 

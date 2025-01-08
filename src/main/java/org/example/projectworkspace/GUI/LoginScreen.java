@@ -114,7 +114,7 @@ public class LoginScreen extends Application implements EventHandler<ActionEvent
             }
             else if("admin".equals(login.getType())){
                 try {
-                    AdminMainMenu adminMainMenu = new AdminMainMenu();
+                    AdminMainMenu adminMainMenu = new AdminMainMenu(login);
                     adminMainMenu.start(new Stage());
                 } catch (Exception e) {
                     throw new RuntimeException(e);
