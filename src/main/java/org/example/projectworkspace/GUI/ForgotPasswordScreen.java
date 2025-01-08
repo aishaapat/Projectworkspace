@@ -104,6 +104,7 @@ public class ForgotPasswordScreen extends Application implements EventHandler<Ac
     private String verifySecurityQuestion(String username, String question, String answer) {
         String sql = "SELECT password FROM users WHERE username=? AND question=? AND answer=?";
         Privateconnection database = new Privateconnection();
+        String password = null;
         try (Connection connection=DriverManager.getConnection(database.getURL(), database.getUsername(), database.getPassword());
              PreparedStatement stmt = connection.prepareStatement(sql)) {
 
@@ -116,22 +117,17 @@ public class ForgotPasswordScreen extends Application implements EventHandler<Ac
             // Execute the query and store the result
             ResultSet resultSet = stmt.executeQuery();
 
+
             // Check if we got any result
             if (resultSet.next()) {
-                String storedQuestion = resultSet.getString("question");
-                String storedAnswer = resultSet.getString("answer");
-                String password = resultSet.getString("password");
-
-                // Verify if the question and answer match
-                if (storedQuestion.equals(question) && storedAnswer.equals(answer)) {
-                    return password;
-                }
+                 password = resultSet.getString("password");
             }
 
+
         } catch (SQLException e) {
-            e.printStackTrace();
+            System.out.println(e.getMessage());
         }
-        return null; // If any inputs don't match
+        return password;
     }
 
 
