@@ -122,7 +122,7 @@ public class AddFlightsScreen extends Application implements EventHandler<Action
                 admin.start(new Stage());
                 stage.close();
             } catch (Exception e) {
-                throw new RuntimeException(e);
+                System.out.println(e.getMessage());;
             }
         }
 

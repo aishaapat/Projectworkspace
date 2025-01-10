@@ -227,9 +227,6 @@ public class ManageBookingsScreen extends Application implements EventHandler<Ac
                         rs.getString("status"));
                 flight.toString();
                 bookedFlights.add(flight);
-
-
-
             }
         } catch (SQLException e) {
             System.out.println(e.getMessage());
