@@ -75,6 +75,8 @@ public class ManageBookingsScreen extends Application implements EventHandler<Ac
         TableColumn<Flight, String> capacityCol = new TableColumn<>("Capacity");
         capacityCol.setCellValueFactory(cellData -> new SimpleStringProperty(String.valueOf(cellData.getValue().getCapacity())));
 
+
+
         TableColumn<Flight, String> dateCol = new TableColumn<>("Date");
         dateCol.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getDate().toString()));
 
@@ -150,6 +152,7 @@ public class ManageBookingsScreen extends Application implements EventHandler<Ac
             int flightID= selectedFlight.getNumber();
 
 
+
             //I am adding the database stuff  now
             Privateconnection db=new Privateconnection();
             try(Connection connection =db.getConnection();
@@ -158,8 +161,11 @@ public class ManageBookingsScreen extends Application implements EventHandler<Ac
                 stmt.setInt(2, UserID);
 
                 int rows= stmt.executeUpdate();
+                int getcapacity=selectedFlight.getCurrentCapacity();
 
                 if(rows>0){
+                    selectedFlight.setCurrentCapacity(getcapacity+1);
+
                     // Show a confirmation alert
                     bookedFlights.remove(selectedFlight);
                     Alert alert = new Alert(AlertType.INFORMATION);
@@ -205,7 +211,7 @@ public class ManageBookingsScreen extends Application implements EventHandler<Ac
     }
     private void userBookings(int userID) {
 
-        String query="SELECT f.number ,f.destination,f.departureLocation,f.capacity,f.takeoff,f.landing,f.date,f.status FROM bookings b " +
+        String query="SELECT f.number ,f.destination,f.departureLocation,f.capacity,f.currentCapacity,f.takeoff,f.landing,f.date,f.status FROM bookings b " +
                 "INNER JOIN flights f on b.fid=f.number WHERE b.uid=?";
         Privateconnection db=new Privateconnection();
         try (Connection connection=db.getConnection();
@@ -217,10 +223,11 @@ public class ManageBookingsScreen extends Application implements EventHandler<Ac
             bookedFlights.clear();
 
             while(rs.next()){
-                Flight flight=new Flight(rs.getInt("number"),
+                Flight flight = new Flight(rs.getInt("number"),
                         rs.getString("destination"),
                         rs.getString("departureLocation"),
                         rs.getInt("capacity"),
+                        rs.getInt("currentCapacity"),
                         rs.getTimestamp("takeoff"),
                         rs.getTimestamp("landing"),
                         rs.getDate("date"),

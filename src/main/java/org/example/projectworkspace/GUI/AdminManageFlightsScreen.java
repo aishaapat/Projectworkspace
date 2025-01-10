@@ -66,6 +66,9 @@ public class AdminManageFlightsScreen extends Application implements EventHandle
         TableColumn<Flight, String> capacityCol = new TableColumn<>("Capacity");
         capacityCol.setCellValueFactory(cellData -> new SimpleStringProperty(String.valueOf(cellData.getValue().getCapacity())));
 
+        TableColumn<Flight, String> currentcapacityCol = new TableColumn<>("Current Capacity");
+        currentcapacityCol.setCellValueFactory(cellData -> new SimpleStringProperty(String.valueOf(cellData.getValue().getCurrentCapacity())));
+
         TableColumn<Flight, String> dateCol = new TableColumn<>("Date");
         dateCol.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getDate().toString()));
 
@@ -78,7 +81,7 @@ public class AdminManageFlightsScreen extends Application implements EventHandle
         TableColumn<Flight, String> flightstatus = new TableColumn<>("Status");
         flightstatus.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getStatus()));
 
-        tableView.getColumns().addAll( fromCityCol, toCityCol,capacityCol, dateCol, timeCol,landingCol,flightstatus);
+        tableView.getColumns().addAll( fromCityCol, toCityCol,capacityCol,currentcapacityCol ,dateCol, timeCol,landingCol,flightstatus);
 
         root.add(backbutton, 5,0);
         AddButton.setStyle("-fx-background-color: #4CAF50; -fx-text-fill: white; -fx-font-size: 16px; -fx-padding: 10px 20px;");
@@ -89,7 +92,7 @@ public class AdminManageFlightsScreen extends Application implements EventHandle
         backbutton.setOnAction(this);
         AddButton.setOnAction(this);
         DeleteButton.setOnAction(this);
-        Scene scene = new Scene(root, 600, 600);
+        Scene scene = new Scene(root, 700, 700);
         stage.setTitle("Admin manage flights");
         stage.setScene(scene);
 
@@ -119,7 +122,6 @@ public class AdminManageFlightsScreen extends Application implements EventHandle
             AddFlightsScreen addflights=new AddFlightsScreen(login);
             try {
                 addflights.start(new Stage());
-                stage.close();
             } catch (Exception e) {
                 throw new RuntimeException(e);
             }
@@ -202,6 +204,7 @@ public class AdminManageFlightsScreen extends Application implements EventHandle
                         rs.getString("destination"),
                         rs.getString("departureLocation"),
                         rs.getInt("capacity"),
+                        rs.getInt("currentCapacity"),
                         rs.getTimestamp("takeoff"),
                         rs.getTimestamp("landing"),
                         rs.getDate("date"),

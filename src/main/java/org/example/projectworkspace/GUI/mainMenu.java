@@ -30,7 +30,7 @@ public class mainMenu extends Application
     @Override
     public void start(Stage stage) {
         this.stage = stage;
-
+        
         // Create the layout
         GridPane root = new GridPane();
         root.setAlignment(Pos.CENTER);
@@ -38,9 +38,11 @@ public class mainMenu extends Application
         root.setHgap(10);
         Text title = new Text("Main Menu");
         title.setStyle("-fx-font-size: 24px; -fx-font-weight: bold;");
+
         //adding log in to check if the user state stays logged in
         // I wanted to double check what their name will be etc
         Text name = new Text("Welcome "+loggedIn.getFirstName());
+
         name.setStyle("-fx-font-size: 12px; -fx-font-weight: bold;");
         root.add(name,1,1, 1, 1);
 

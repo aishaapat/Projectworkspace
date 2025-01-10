@@ -52,7 +52,7 @@ public class AddFlightsScreen extends Application implements EventHandler<Action
         label1 = new Label("From:");
         label2 = new Label("To:");
         label3 = new Label("Date:");
-        Scene scene = new Scene(root, 600, 600);
+        Scene scene = new Scene(root, 500, 500);
         root.add(title, 0, 0);
         root.add(fromCityField, 1, 1);
         root.add(toCityField, 1, 2);
@@ -93,8 +93,8 @@ public class AddFlightsScreen extends Application implements EventHandler<Action
         //add enter button
 
         root.add(enterButton,1,10);
-        root.add(back,1,11);
-        back.setOnAction(this);
+
+        //got rid of back button was giving us problems
         root.setAlignment(Pos.CENTER);
         stage.setResizable(false);
         stage.setTitle("Admin Only- Add Flights");
@@ -116,17 +116,9 @@ public class AddFlightsScreen extends Application implements EventHandler<Action
         String takeoffValue=flightDateValue+" "+takeoff.getText() ;
         String landingValue=flightDateValue+" "+landing.getText();
         String check = status.getValue();
-        if(actionEvent.getSource() == back) {
-            AdminManageFlightsScreen admin = new AdminManageFlightsScreen(login);
-            try {
-                admin.start(new Stage());
-                stage.close();
-            } catch (Exception e) {
-                System.out.println(e.getMessage());;
-            }
-        }
 
-        else if(actionEvent.getSource() == enterButton)
+
+        if(actionEvent.getSource() == enterButton)
         {
 
              if (fromCity.isEmpty() | toCity.isEmpty() | flightDateValue.isEmpty()| capacityValue<0 | currentcapacityValue<0 | takeoffValue.isEmpty() | landingValue.isEmpty())

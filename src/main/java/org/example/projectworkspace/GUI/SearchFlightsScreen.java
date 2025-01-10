@@ -88,6 +88,9 @@ public class SearchFlightsScreen extends Application implements EventHandler<Act
         TableColumn<Flight, String> capacityCol = new TableColumn<>("Capacity");
         capacityCol.setCellValueFactory(cellData -> new SimpleStringProperty(String.valueOf(cellData.getValue().getCapacity())));
 
+        TableColumn<Flight, String> currentcapacityCol = new TableColumn<>("Current Capacity");
+        currentcapacityCol.setCellValueFactory(cellData -> new SimpleStringProperty(String.valueOf(cellData.getValue().getCurrentCapacity())));
+
         TableColumn<Flight, String> dateCol = new TableColumn<>("Date");
         dateCol.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getDate().toString()));
 
@@ -101,7 +104,10 @@ public class SearchFlightsScreen extends Application implements EventHandler<Act
         flightstatus.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getStatus()));
 
 
-        tableView.getColumns().addAll( fromCityCol, toCityCol,capacityCol, dateCol, timeCol,landingCol,flightstatus);
+
+
+
+        tableView.getColumns().addAll( fromCityCol, toCityCol,capacityCol,currentcapacityCol, dateCol, timeCol,landingCol,flightstatus);
 
 
 
@@ -140,7 +146,7 @@ public class SearchFlightsScreen extends Application implements EventHandler<Act
 
         root.add(back, 1, 7);
 
-        Scene scene = new Scene(root, 600, 600);
+        Scene scene = new Scene(root, 700, 700);
         stage.setTitle("Post Login - Flight Booking");
         stage.setScene(scene);
         stage.show();
@@ -198,87 +204,127 @@ public class SearchFlightsScreen extends Application implements EventHandler<Act
     private boolean checkfortime(TableView<Flight> tableView, int UserID) {
         Flight selectedFlight = tableView.getSelectionModel().getSelectedItem();
         int flightnum = selectedFlight.getNumber();
-        boolean check = false;
+        boolean check = true;
         Date selectedDate = selectedFlight.getDate();
 
-        // Inserting a query to check if there is a date conflict
-        String query = "SELECT fid FROM bookings WHERE uid=" + UserID;
+        // SQL query to check if there is a booking for the user
+        String query = "SELECT fid FROM bookings WHERE uid = ?";
         Privateconnection db = new Privateconnection();
+
         try (Connection connection = db.getConnection();
              PreparedStatement stmt = connection.prepareStatement(query)) {
+
+            stmt.setInt(1, UserID);
             ResultSet rs = stmt.executeQuery();
-            // Corrected to executeQuery() instead of executeUpdate()
-            while (rs.next()) {
-                int flightid=rs.getInt("fid");
-                String flightdateQuery="SELECT date FROM flights WHERE number =?";
-                try(PreparedStatement statement=connection.prepareStatement(flightdateQuery)){
-                    statement.setInt(1,flightid);
+
+            while (rs.next())
+            {
+                int flightid = rs.getInt("fid");
+                String flightdateQuery = "SELECT date FROM flights WHERE number = ?";
+
+                try (PreparedStatement statement = connection.prepareStatement(flightdateQuery))
+                {
+                    statement.setInt(1, flightid);
                     ResultSet rs2 = statement.executeQuery();
-                    if(rs2.next()){
-                        Date flightDate=rs2.getDate("date");
-                        if(flightDate.equals(selectedDate)){
-                            check = false;
-                            Alert alert = new Alert(Alert.AlertType.INFORMATION);
-                            alert.setTitle("ERROR");
-                            alert.setHeaderText(null);
-                            alert.setContentText("You cannot add this flight due to a time issue");
-                            alert.showAndWait();
-                            break;
+
+                    if (rs2.next())
+                    {
+                        Date flightDate = rs2.getDate("date");
+                        if (flightDate.equals(selectedDate))
+                        {
+                            check = false;  // Conflict found, set check to false
+                            break;  // Exit the loop
                         }
-                        else check=true;
                     }
                 }
             }
 
+            if (!check) {
+                Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                alert.setTitle("ERROR");
+                alert.setHeaderText(null);
+                alert.setContentText("You cannot add this flight due to a time issue");
+                alert.showAndWait();
+            }
+
         } catch (SQLException e) {
+            e.printStackTrace();  // Print or log the error for debugging purposes
             throw new RuntimeException(e);
         }
 
-        return check;
+        return check;  // Return true if no conflict, false if conflict found
     }
 
-    private void addFlights(TableView <Flight> tableView,int UserID){
-        Flight selectedFlight=tableView.getSelectionModel().getSelectedItem();
-        if(selectedFlight==null){
+
+    private void addFlights(TableView<Flight> tableView, int UserID) {
+        Flight selectedFlight = tableView.getSelectionModel().getSelectedItem();
+
+        // Check if a flight is selected
+        if (selectedFlight == null) {
             Alert alert = new Alert(Alert.AlertType.INFORMATION);
             alert.setTitle("ERROR");
             alert.setHeaderText(null);
             alert.setContentText("Please select a flight");
             alert.showAndWait();
         }
-        else if(checkforduplicates(tableView,login.getUserID())==true){
-//            if(checkfortime(tableView,login.getUserID())==true){
+        // Check for duplicates
+        else if (checkforduplicates(tableView, login.getUserID())) {
+            // Check for time conflict
+            if (checkfortime(tableView, login.getUserID())) {
+                int flightCapacity = selectedFlight.getCurrentCapacity();
 
-                int flightnum=selectedFlight.getNumber();
-                String query= "INSERT INTO bookings (fid,uid) VALUES ("+flightnum+","+UserID+")";
-                //now we will add the flights to bookings
-                Privateconnection db=new Privateconnection();
-                try (Connection connection=db.getConnection();
-                     PreparedStatement preparedStatement = connection.prepareStatement(query))
-                {
-                    int rows=preparedStatement.executeUpdate();
-                    if(rows>0){
-                        System.out.println("success");
-                        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
-                        alert.setTitle("Confirmation");
-                        alert.setHeaderText(null);
-                        alert.setContentText("Flight added successfully");
-                        alert.showAndWait();
-                    }
-                    else{
+                // Check if capacity is available
+                if (flightCapacity > 0) {
+                    int flightNum = selectedFlight.getNumber();
+                    String query = "INSERT INTO bookings (fid, uid) VALUES (?, ?)";
+
+                    // Add the flight to bookings
+                    Privateconnection db = new Privateconnection();
+                    try (Connection connection = db.getConnection();
+                         PreparedStatement preparedStatement = connection.prepareStatement(query)) {
+
+                        preparedStatement.setInt(1, flightNum);
+                        preparedStatement.setInt(2, UserID);
+
+                        int rows = preparedStatement.executeUpdate();
+                        if (rows > 0) {
+                            // Decrease the flight capacity after booking by 1 to verify user booked this seat
+
+                            selectedFlight.setCurrentCapacity(flightCapacity - 1);
+
+
+                            Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+                            alert.setTitle("Confirmation");
+                            alert.setHeaderText(null);
+                            alert.setContentText("Flight added successfully");
+                            alert.showAndWait();
+                        } else {
+                            Alert alert = new Alert(Alert.AlertType.ERROR);
+                            alert.setTitle("Error");
+                            alert.setHeaderText(null);
+                            alert.setContentText("Flight not added");
+                            alert.showAndWait();
+                        }
+                    } catch (SQLException e) {
+                        e.printStackTrace();
                         Alert alert = new Alert(Alert.AlertType.ERROR);
-                        alert.setTitle("Error");
-                        alert.setHeaderText(null);
-                        alert.setContentText("Flight not added");
+                        alert.setTitle("Database Error");
+                        alert.setHeaderText("An error occurred while booking the flight.");
+                        alert.setContentText(e.getMessage());
                         alert.showAndWait();
                     }
-                } catch (SQLException e) {
-                    throw new RuntimeException(e);
+                } else {
+                    // Display alert if capacity is full
+                    Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                    alert.setTitle("Error");
+                    alert.setHeaderText(null);
+                    alert.setContentText("Flight not added because the capacity is full");
+                    alert.showAndWait();
                 }
-
-        //}
+            }
         }
     }
+
     private void searchFlights(TableView<Flight> tableView,String fromcity,  String tocity ,String takeOff,String date)
     {
 
@@ -296,6 +342,7 @@ public class SearchFlightsScreen extends Application implements EventHandler<Act
                             rs.getString("destination"),
                             rs.getString("departureLocation"),
                             rs.getInt("capacity"),
+                            rs.getInt("currentCapacity"),
                             rs.getTimestamp("takeoff"),
                             rs.getTimestamp("landing"),
                             rs.getDate("date"),
