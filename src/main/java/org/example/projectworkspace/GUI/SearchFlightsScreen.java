@@ -247,7 +247,7 @@ public class SearchFlightsScreen extends Application implements EventHandler<Act
             alert.showAndWait();
         }
         else if(checkforduplicates(tableView,login.getUserID())==true){
-            if(checkfortime(tableView,login.getUserID())==true){
+//            if(checkfortime(tableView,login.getUserID())==true){
 
                 int flightnum=selectedFlight.getNumber();
                 String query= "INSERT INTO bookings (fid,uid) VALUES ("+flightnum+","+UserID+")";
@@ -276,7 +276,7 @@ public class SearchFlightsScreen extends Application implements EventHandler<Act
                     throw new RuntimeException(e);
                 }
 
-            }
+        //}
         }
     }
     private void searchFlights(TableView<Flight> tableView,String fromcity,  String tocity ,String takeOff,String date)
