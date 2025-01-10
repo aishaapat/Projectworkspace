@@ -50,6 +50,7 @@ public class AdminManageFlightsScreen extends Application implements EventHandle
         root.setAlignment(Pos.CENTER);
         root.setVgap(10);
         Label title = new Label("Admin Manage Flights");
+        title.setStyle("-fx-font-size: 24px; -fx-font-weight: bold;");
 
         //adding table componenets
 

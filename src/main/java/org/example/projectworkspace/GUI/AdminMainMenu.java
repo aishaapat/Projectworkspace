@@ -48,11 +48,15 @@ public class AdminMainMenu extends Application implements EventHandler<ActionEve
         // :: is a method reference used to shorten action handlers like
         // manageBookingsButton.setOnAction(event -> handleManageBookings(event));
         manageBookingsButton.setOnAction(this::handleManageBookings);
+        manageBookingsButton.setStyle("-fx-background-color: #4CAF50; -fx-text-fill: white; -fx-font-size: 12px; -fx-padding: 7px 12px;");
 
         // Action for Logout button
         logoutButton.setOnAction(this::handleLogout);
+        //styling the buttons
+        logoutButton.setStyle("-fx-background-color: #4CAF50; -fx-text-fill: white; -fx-font-size: 12px; -fx-padding: 7px 12px;");
 
         ManagePageButton.setOnAction(this);
+        ManagePageButton.setStyle("-fx-background-color: #4CAF50; -fx-text-fill: white; -fx-font-size: 12px; -fx-padding: 7px 12px;");
         // Action for Manage Flights Button
         // TODO : Add method handler for -> ManageFlights.setOnAction(this::handleManageFlights);
 

@@ -24,7 +24,6 @@ public class mainMenu extends Application
     Stage stage;
 
 
-    String firstname;
 
 
     @Override
@@ -43,8 +42,8 @@ public class mainMenu extends Application
         // I wanted to double check what their name will be etc
         Text name = new Text("Welcome "+loggedIn.getFirstName());
 
-        name.setStyle("-fx-font-size: 12px; -fx-font-weight: bold;");
-        root.add(name,1,1, 1, 1);
+        name.setStyle("-fx-font-size: 20px; -fx-font-weight: bold;");
+
 
 
         // we will add this when connection details work properly
@@ -55,6 +54,10 @@ public class mainMenu extends Application
         Button manageBookingsButton = new Button("Manage Bookings");
         Button logoutButton = new Button("Logout");
 
+        //styling buttons
+        manageBookingsButton.setStyle("-fx-background-color: #4CAF50; -fx-text-fill: white; -fx-font-size: 12px; -fx-padding: 7px 12px;");
+        logoutButton.setStyle("-fx-background-color: #4CAF50; -fx-text-fill: white; -fx-font-size: 12px; -fx-padding: 7px 12px;");
+
         // Action for Manage Bookings button
         manageBookingsButton.setOnAction(this::handleManageBookings);
 
@@ -63,6 +66,8 @@ public class mainMenu extends Application
 
         // Add components to layout
         root.add(title, 0, 0, 2, 1);  // Spans 2 columns
+
+        root.add(name,0,1, 2, 1);
 
         GridPane.setHalignment(title, javafx.geometry.HPos.CENTER); // Center the title horizontally
 
