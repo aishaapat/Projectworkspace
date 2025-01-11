@@ -6,7 +6,6 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
@@ -16,36 +15,26 @@ import javafx.geometry.Insets;
 import org.example.projectworkspace.Flights.Flight;
 import org.example.projectworkspace.UserState.LoggedIn;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.time.LocalDate;
+import java.sql.*;
 import java.util.Date;
 
-public class SearchFlightsScreen extends Application implements EventHandler<ActionEvent>
-{
-    //adding constructors for menus that need it
-   private LoggedIn login;
-   SearchFlightsScreen(LoggedIn login){
-       this.login = login;
-   }
+public class SearchFlightsScreen extends Application {
 
-    Label label1, label2, label3;
-    TextField fromCityField, toCityField,takeOff;
-    DatePicker flightDate;
-    Button searchButton, bookButton;
-    Stage stage;
-    BackButton back = new BackButton();
+    private LoggedIn login;
 
-    //adding a table to display all of the flights
-    ObservableList<Flight> currentflights = FXCollections.observableArrayList();
+    public SearchFlightsScreen(LoggedIn login) {
+        this.login = login;
+    }
+
+    private Label label1, label2, label3;
+    private TextField fromCityField, toCityField, takeOff;
+    private DatePicker flightDate;
+    private Button searchButton, bookButton;
+    private TableView<Flight> tableView;
+    private ObservableList<Flight> currentFlights = FXCollections.observableArrayList();
 
     @Override
     public void start(Stage stage) {
-        this.stage = stage;
-
-        // Set up the layout
         GridPane root = new GridPane();
         root.setAlignment(Pos.CENTER);
         root.setVgap(10);
@@ -58,7 +47,6 @@ public class SearchFlightsScreen extends Application implements EventHandler<Act
         label2 = new Label("From City:");
         label3 = new Label("To City:");
 
-        // Input fields for search criteria
         fromCityField = new TextField();
         fromCityField.setPromptText("Enter departure city");
 
@@ -68,17 +56,55 @@ public class SearchFlightsScreen extends Application implements EventHandler<Act
         flightDate = new DatePicker();
         flightDate.setPromptText("Select flight date");
 
-        //adding a textfield for searching time
         takeOff = new TextField();
-        takeOff.setPromptText("Enter take off time");
+        takeOff.setPromptText("Enter take-off time");
 
-        //creating a new tableview to display the flights
+        tableView = createTableView();
+
+        searchButton = new Button("Search Flights");
+        searchButton.setOnAction(e -> searchFlights());
+
+        bookButton = new Button("Book Flight");
+        bookButton.setOnAction(e -> addFlights());
+
+        // Add back button
+        Button backButton = new Button("Back");
+        backButton.setOnAction(e -> goToManageBookingsScreen(stage));
+
+        root.add(label1, 0, 0, 2, 1);
+        root.add(label2, 0, 1);
+        root.add(fromCityField, 1, 1);
+        root.add(label3, 0, 2);
+        root.add(toCityField, 1, 2);
+        root.add(new Label("Flight Date:"), 0, 3);
+        root.add(flightDate, 1, 3);
+        root.add(new Label("Flight Time:"), 0, 4);
+        root.add(takeOff, 1, 4);
+        root.add(searchButton, 0, 5);
+        root.add(bookButton, 1, 5);
+        root.add(backButton, 0, 6); // Add back button
+        root.add(tableView, 0, 7, 2, 1);
+
+        Scene scene = new Scene(root, 800, 600);
+        stage.setTitle("Flight Booking System");
+        stage.setScene(scene);
+        stage.show();
+    }
+
+    private void goToManageBookingsScreen(Stage stage) {
+        ManageBookingsScreen manageBookingsScreen = new ManageBookingsScreen(login);
+        try {
+            manageBookingsScreen.start(stage); // Navigate to the ManageBookingsScreen
+        } catch (Exception e) {
+            e.printStackTrace();
+            showAlert(Alert.AlertType.ERROR, "Error", "Failed to navigate to Manage Bookings Screen.");
+        }
+    }
+
+
+    private TableView<Flight> createTableView() {
         TableView<Flight> tableView = new TableView<>();
-        //add methods for searching and adding flights after
-        tableView.setItems(currentflights);
 
-
-        // defining columns
         TableColumn<Flight, String> fromCityCol = new TableColumn<>("From City");
         fromCityCol.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getDepartureLocation()));
 
@@ -87,9 +113,6 @@ public class SearchFlightsScreen extends Application implements EventHandler<Act
 
         TableColumn<Flight, String> capacityCol = new TableColumn<>("Capacity");
         capacityCol.setCellValueFactory(cellData -> new SimpleStringProperty(String.valueOf(cellData.getValue().getCapacity())));
-
-        TableColumn<Flight, String> currentcapacityCol = new TableColumn<>("Current Capacity");
-        currentcapacityCol.setCellValueFactory(cellData -> new SimpleStringProperty(String.valueOf(cellData.getValue().getCurrentCapacity())));
 
         TableColumn<Flight, String> dateCol = new TableColumn<>("Date");
         dateCol.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getDate().toString()));
@@ -100,261 +123,177 @@ public class SearchFlightsScreen extends Application implements EventHandler<Act
         TableColumn<Flight, String> landingCol = new TableColumn<>("Landing Time");
         landingCol.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getLanding().toString()));
 
-        TableColumn<Flight, String> flightstatus = new TableColumn<>("Status");
-        flightstatus.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getStatus()));
+        TableColumn<Flight, String> statusCol = new TableColumn<>("Status");
+        statusCol.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getStatus()));
 
+        tableView.getColumns().addAll(fromCityCol, toCityCol, capacityCol, dateCol, timeCol, landingCol, statusCol);
+        tableView.setItems(currentFlights);
 
-
-
-
-        tableView.getColumns().addAll( fromCityCol, toCityCol,capacityCol,currentcapacityCol, dateCol, timeCol,landingCol,flightstatus);
-
-
-
-        // Search button action
-        String fromcity=fromCityField.getText();
-        String tocity=toCityField.getText();
-        String takeoff=takeOff.getText();
-        String flightDateValue = flightDate.getValue() != null ? flightDate.getValue().toString() : null;
-        searchButton = new Button("Search Flights");
-        searchButton.setOnAction(e->searchFlights(tableView,fromcity,tocity,takeoff,flightDateValue));
-
-
-        // Book button action
-        bookButton = new Button("Book Flight");
-
-        bookButton.setOnAction(e -> addFlights(tableView,login.getUserID()));
-
-
-
-        back.setOnAction(this);
-
-
-        // Add components to grid
-        root.add(label1, 0, 0, 2, 1);
-        root.add(label2, 0, 1);
-        root.add(fromCityField, 1, 1);
-        root.add(label3, 0, 2);
-        root.add(toCityField, 1, 2);
-        root.add(new Label("Flight Date:"), 0, 3);
-        root.add(flightDate, 1, 3);
-        root.add(new Label("Flight Time:"), 0, 4);
-        root.add(takeOff, 1, 4);
-        root.add(searchButton, 0, 5, 2, 1);
-        root.add(bookButton, 0, 6);
-        root.add(tableView, 0, 7);
-
-        root.add(back, 1, 7);
-
-        Scene scene = new Scene(root, 700, 700);
-        stage.setTitle("Post Login - Flight Booking");
-        stage.setScene(scene);
-        stage.show();
+        return tableView;
     }
 
+    private void searchFlights() {
+        currentFlights.clear();
 
+        String fromCity = fromCityField.getText();
+        String toCity = toCityField.getText();
+        String takeOffTime = takeOff.getText();
+        String flightDateValue = (flightDate.getValue() != null) ? flightDate.getValue().toString() : null;
 
+        // Build the base query string
+        StringBuilder query = new StringBuilder("SELECT * FROM flights WHERE 1=1");
 
-
-
-    // Main method to launch the application
-    public static void main(String[] args) {
-        launch(args);
-    }
-
-    @Override
-    public void handle(ActionEvent actionEvent) {
-        if(actionEvent.getSource()==back){
-            ManageBookingsScreen manageBookingsScreen = new ManageBookingsScreen(login);
-            manageBookingsScreen.start(new Stage());
-            stage.close();
-
+        // Append conditions for each search criteria
+        if (fromCity != null && !fromCity.isEmpty()) {
+            query.append(" AND departureLocation LIKE ?");
         }
-    }
-    private boolean checkforduplicates(TableView<Flight> tableView, int UserID) {
-        Flight selectedFlight = tableView.getSelectionModel().getSelectedItem();
-        int flightnum = selectedFlight.getNumber();
-        boolean check = false;
+        if (toCity != null && !toCity.isEmpty()) {
+            query.append(" AND destination LIKE ?");
+        }
+        if (flightDateValue != null && !flightDateValue.isEmpty()) {
+            query.append(" AND DATE(takeoff) = ?");
+        }
+        if (takeOffTime != null && !takeOffTime.isEmpty()) {
+            query.append(" AND takeoff LIKE ?");
+        }
 
-        // Assigning the query
-        String query = "SELECT uid FROM bookings WHERE uid= " + UserID + " AND fid="+ flightnum;
+        try (Connection connection = new Privateconnection().getConnection();
+             PreparedStatement preparedStatement = buildSearchQuery(query, connection, fromCity, toCity, takeOffTime, flightDateValue)) {
 
-        // This is to check if the flight hasn't been booked twice
-        Privateconnection db = new Privateconnection();
-        try (Connection connection = db.getConnection();
-             PreparedStatement stmt = connection.prepareStatement(query)) {
-            ResultSet rs = stmt.executeQuery();  // Corrected to executeQuery() instead of executeUpdate()
-
-            if (rs.next()) {
-                Alert alert = new Alert(Alert.AlertType.INFORMATION);
-                alert.setTitle("ERROR");
-                alert.setHeaderText(null);
-                alert.setContentText("You cannot add the same flight twice");
-                alert.showAndWait();
-            } else {
-                check = true;
+            ResultSet rs = preparedStatement.executeQuery();
+            while (rs.next()) {
+                // Create the flight object with 8 required arguments
+                Flight flight = new Flight(
+                        rs.getInt("number"),
+                        rs.getString("destination"),
+                        rs.getString("departureLocation"),
+                        rs.getInt("capacity"),
+                        rs.getInt("currentCapacity"),
+                        rs.getTimestamp("takeoff"),
+                        rs.getTimestamp("landing"),
+                        rs.getDate("date"),
+                        rs.getString("status")
+                );
+                currentFlights.add(flight);
             }
-
         } catch (SQLException e) {
-            System.out.println(e.getMessage());
+            e.printStackTrace();
+            showAlert(Alert.AlertType.ERROR, "Error", "Failed to fetch flights.");
         }
-        return check;
     }
 
-    private boolean checkfortime(TableView<Flight> tableView, int UserID) {
-        Flight selectedFlight = tableView.getSelectionModel().getSelectedItem();
-        int flightnum = selectedFlight.getNumber();
-        boolean check = true;
-        Date selectedDate = selectedFlight.getDate();
+    private PreparedStatement buildSearchQuery(StringBuilder query, Connection connection, String fromCity, String toCity, String takeOffTime, String flightDateValue) throws SQLException {
+        System.out.println("Generated Query: " + query.toString()); // Debug print to check the query structure
 
-        // SQL query to check if there is a booking for the user
-        String query = "SELECT fid FROM bookings WHERE uid = ?";
-        Privateconnection db = new Privateconnection();
+        PreparedStatement preparedStatement = connection.prepareStatement(query.toString());
+        int index = 1;
 
-        try (Connection connection = db.getConnection();
-             PreparedStatement stmt = connection.prepareStatement(query)) {
+        if (fromCity != null && !fromCity.isEmpty()) {
+            preparedStatement.setString(index++, "%" + fromCity + "%");
+        }
+        if (toCity != null && !toCity.isEmpty()) {
+            preparedStatement.setString(index++, "%" + toCity + "%");
+        }
+        if (takeOffTime != null && !takeOffTime.isEmpty()) {
+            System.out.println("Setting takeOffTime: " + takeOffTime); // Debug print to check takeOffTime
+            preparedStatement.setString(index++, "%" + takeOffTime + "%");
+        }
+        if (flightDateValue != null && !flightDateValue.isEmpty()) {
+            System.out.println("Setting flightDateValue: " + flightDateValue); // Debug print to check flightDateValue
+            preparedStatement.setString(index, flightDateValue);  // Assuming flightDateValue is formatted correctly
+        }
 
-            stmt.setInt(1, UserID);
-            ResultSet rs = stmt.executeQuery();
+        return preparedStatement;
+    }
 
-            while (rs.next())
-            {
-                int flightid = rs.getInt("fid");
-                String flightdateQuery = "SELECT date FROM flights WHERE number = ?";
 
-                try (PreparedStatement statement = connection.prepareStatement(flightdateQuery))
-                {
-                    statement.setInt(1, flightid);
-                    ResultSet rs2 = statement.executeQuery();
 
-                    if (rs2.next())
-                    {
-                        Date flightDate = rs2.getDate("date");
-                        if (flightDate.equals(selectedDate))
-                        {
-                            check = false;  // Conflict found, set check to false
-                            break;  // Exit the loop
-                        }
-                    }
-                }
+    private boolean checkForDuplicateBookings(Flight selectedFlight) {
+        String query = "SELECT COUNT(*) FROM bookings WHERE fid = ? AND uid = ?";
+        try (Connection connection = new Privateconnection().getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(query)) {
+
+            preparedStatement.setInt(1, selectedFlight.getNumber());
+            preparedStatement.setInt(2, login.getUserID());
+
+            ResultSet resultSet = preparedStatement.executeQuery();
+            if (resultSet.next() && resultSet.getInt(1) > 0) {
+                showAlert(Alert.AlertType.WARNING, "Duplicate Booking", "You have already booked this flight.");
+                return false;
             }
-
-            if (!check) {
-                Alert alert = new Alert(Alert.AlertType.INFORMATION);
-                alert.setTitle("ERROR");
-                alert.setHeaderText(null);
-                alert.setContentText("You cannot add this flight due to a time issue");
-                alert.showAndWait();
-            }
-
         } catch (SQLException e) {
-            e.printStackTrace();  // Print or log the error for debugging purposes
-            throw new RuntimeException(e);
+            e.printStackTrace();
+            showAlert(Alert.AlertType.ERROR, "Error", "Failed to check for duplicate bookings.");
         }
+        return true;
+    }
 
-        return check;  // Return true if no conflict, false if conflict found
+    private boolean checkForTimeConflicts(Flight selectedFlight) {
+        String query = "SELECT COUNT(*) FROM bookings b " +
+                "JOIN flights f ON b.fid = f.number " +
+                "WHERE b.uid = ? AND (f.takeoff = ? OR f.landing = ?)";
+        try (Connection connection = new Privateconnection().getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(query)) {
+
+            preparedStatement.setInt(1, login.getUserID());
+
+            // Use java.sql.Timestamp for takeoff and landing
+            preparedStatement.setTimestamp(2, new Timestamp(selectedFlight.getTakeoff().getTime()));
+            preparedStatement.setTimestamp(3, new Timestamp(selectedFlight.getLanding().getTime()));
+
+            ResultSet resultSet = preparedStatement.executeQuery();
+            if (resultSet.next() && resultSet.getInt(1) > 0) {
+                showAlert(Alert.AlertType.WARNING, "Time Conflict", "You already have a booking during this time.");
+                return false;
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            showAlert(Alert.AlertType.ERROR, "Error", "Failed to check for time conflicts.");
+        }
+        return true;
     }
 
 
-    private void addFlights(TableView<Flight> tableView, int UserID) {
-        Flight selectedFlight = tableView.getSelectionModel().getSelectedItem();
 
-        // Check if a flight is selected
+    private void addFlights() {
+        Flight selectedFlight = tableView.getSelectionModel().getSelectedItem();
         if (selectedFlight == null) {
-            Alert alert = new Alert(Alert.AlertType.INFORMATION);
-            alert.setTitle("ERROR");
-            alert.setHeaderText(null);
-            alert.setContentText("Please select a flight");
-            alert.showAndWait();
+            showAlert(Alert.AlertType.WARNING, "Warning", "Please select a flight to book.");
+            return;
         }
-        // Check for duplicates
-        else if (checkforduplicates(tableView, login.getUserID())) {
-            // Check for time conflict
-            if (checkfortime(tableView, login.getUserID())) {
-                int flightCapacity = selectedFlight.getCurrentCapacity();
 
-                // Check if capacity is available
-                if (flightCapacity > 0) {
-                    int flightNum = selectedFlight.getNumber();
-                    String query = "INSERT INTO bookings (fid, uid) VALUES (?, ?)";
+        if (!checkForDuplicateBookings(selectedFlight) || !checkForTimeConflicts(selectedFlight)) {
+            return;
+        }
 
-                    // Add the flight to bookings
-                    Privateconnection db = new Privateconnection();
-                    try (Connection connection = db.getConnection();
-                         PreparedStatement preparedStatement = connection.prepareStatement(query)) {
+        String query = "INSERT INTO bookings (fid, uid) VALUES (?, ?)";
 
-                        preparedStatement.setInt(1, flightNum);
-                        preparedStatement.setInt(2, UserID);
+        try (Connection connection = new Privateconnection().getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(query)) {
 
-                        int rows = preparedStatement.executeUpdate();
-                        if (rows > 0) {
-                            // Decrease the flight capacity after booking by 1 to verify user booked this seat
+            preparedStatement.setInt(1, selectedFlight.getNumber());
+            preparedStatement.setInt(2, login.getUserID());
 
-                            selectedFlight.setCurrentCapacity(flightCapacity - 1);
+            int rowsAffected = preparedStatement.executeUpdate();
 
-
-                            Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
-                            alert.setTitle("Confirmation");
-                            alert.setHeaderText(null);
-                            alert.setContentText("Flight added successfully");
-                            alert.showAndWait();
-                        } else {
-                            Alert alert = new Alert(Alert.AlertType.ERROR);
-                            alert.setTitle("Error");
-                            alert.setHeaderText(null);
-                            alert.setContentText("Flight not added");
-                            alert.showAndWait();
-                        }
-                    } catch (SQLException e) {
-                        e.printStackTrace();
-                        Alert alert = new Alert(Alert.AlertType.ERROR);
-                        alert.setTitle("Database Error");
-                        alert.setHeaderText("An error occurred while booking the flight.");
-                        alert.setContentText(e.getMessage());
-                        alert.showAndWait();
-                    }
-                } else {
-                    // Display alert if capacity is full
-                    Alert alert = new Alert(Alert.AlertType.INFORMATION);
-                    alert.setTitle("Error");
-                    alert.setHeaderText(null);
-                    alert.setContentText("Flight not added because the capacity is full");
-                    alert.showAndWait();
-                }
+            if (rowsAffected > 0) {
+                showAlert(Alert.AlertType.INFORMATION, "Success", "Flight booked successfully!");
+            } else {
+                showAlert(Alert.AlertType.ERROR, "Error", "Failed to book the flight.");
             }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            showAlert(Alert.AlertType.ERROR, "Error", "An error occurred while booking the flight.");
         }
     }
 
-    private void searchFlights(TableView<Flight> tableView,String fromcity,  String tocity ,String takeOff,String date)
-    {
 
-        String query="";
-        Privateconnection db = new Privateconnection();
-        if(fromcity.isEmpty() || tocity.isEmpty() || takeOff.isEmpty() || date.isEmpty()) {
-            query="SELECT  * FROM flights";
-            try (Connection connection = db.getConnection();
-                 PreparedStatement preparedStatement = connection.prepareStatement(query);) {
-                ResultSet rs = preparedStatement.executeQuery();
-                // clearing the table first
-                currentflights.clear();
-                while (rs.next()) {
-                    Flight flight = new Flight(rs.getInt("number"),
-                            rs.getString("destination"),
-                            rs.getString("departureLocation"),
-                            rs.getInt("capacity"),
-                            rs.getInt("currentCapacity"),
-                            rs.getTimestamp("takeoff"),
-                            rs.getTimestamp("landing"),
-                            rs.getDate("date"),
-                            rs.getString("status"));
-                    flight.toString();
-                    currentflights.add(flight);
-                }
-            } catch (SQLException e) {
-                throw new RuntimeException(e);
-            }
-        }
-
-
+    private void showAlert(Alert.AlertType alertType, String title, String message) {
+        Alert alert = new Alert(alertType);
+        alert.setTitle(title);
+        alert.setHeaderText(null);
+        alert.setContentText(message);
+        alert.showAndWait();
     }
+
 }

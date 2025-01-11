@@ -18,13 +18,12 @@ public class Flight {
     private String status; // Flight status (e.g., "On time", "Delayed", "Cancelled")
 
     // Constructor to initialize all fields
-    public Flight(int number, String destination, String departureLocation, int capacity,int currentCapacity,
-                  Timestamp takeoff, Timestamp landing, Date date, String status) {
+    public Flight(int number, String destination, String departureLocation, int capacity, int currentCapacity, Timestamp takeoff, Timestamp landing, Date date, String status) {
         this.number = number;
         this.destination = destination;
         this.departureLocation = departureLocation;
-        this.currentCapacity = currentCapacity;
         this.capacity = capacity;
+        this.currentCapacity = currentCapacity;
         this.takeoff = takeoff;
         this.landing = landing;
         this.date = date;

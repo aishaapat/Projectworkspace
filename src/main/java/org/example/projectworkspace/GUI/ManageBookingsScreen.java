@@ -31,13 +31,14 @@ import java.sql.SQLException;
 
 public class ManageBookingsScreen extends Application implements EventHandler<ActionEvent> {
     private LoggedIn login;
+
     ManageBookingsScreen(LoggedIn login) {
         this.login = login;
     }
 
 
     Stage stage;
-  // going to replace with a loggedin class instead
+    // going to replace with a loggedin class instead
     Button searchButton = new Button("Search Flights");
 
 
@@ -55,7 +56,7 @@ public class ManageBookingsScreen extends Application implements EventHandler<Ac
         root.setHgap(10);
         root.setPadding(new Insets(20, 20, 20, 20));
 
-        Label title = new Label("Your Booked Flights "+login.getFirstName());
+        Label title = new Label("Your Booked Flights " + login.getFirstName());
         title.setStyle("-fx-font-size: 24px; -fx-font-weight: bold;");
 
         // Table to display booked flights
@@ -75,8 +76,6 @@ public class ManageBookingsScreen extends Application implements EventHandler<Ac
         TableColumn<Flight, String> capacityCol = new TableColumn<>("Capacity");
         capacityCol.setCellValueFactory(cellData -> new SimpleStringProperty(String.valueOf(cellData.getValue().getCapacity())));
 
-
-
         TableColumn<Flight, String> dateCol = new TableColumn<>("Date");
         dateCol.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getDate().toString()));
 
@@ -90,8 +89,7 @@ public class ManageBookingsScreen extends Application implements EventHandler<Ac
         flightstatus.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getStatus()));
 
 
-        tableView.getColumns().addAll( fromCityCol, toCityCol,capacityCol, dateCol, timeCol,landingCol,flightstatus);
-
+        tableView.getColumns().addAll(fromCityCol, toCityCol, capacityCol, dateCol, timeCol, landingCol, flightstatus);
 
 
         // Delete button action
@@ -104,13 +102,12 @@ public class ManageBookingsScreen extends Application implements EventHandler<Ac
         Button backButton = new Button("Back to Main Menu");
         backButton.setOnAction(e ->
         {
-            if("user".equals(login.getType()) || login.getType() == null) {
+            if ("user".equals(login.getType()) || login.getType() == null) {
                 mainMenu main = new mainMenu(login);
                 main.start(new Stage());
 
                 stage.close();
-            }
-            else if("admin".equals(login.getType())){
+            } else if ("admin".equals(login.getType())) {
 
                 AdminMainMenu adminMainMenu = new AdminMainMenu(login);
                 adminMainMenu.start(new Stage());
@@ -136,7 +133,7 @@ public class ManageBookingsScreen extends Application implements EventHandler<Ac
         Flight selectedFlight = tableView.getSelectionModel().getSelectedItem();
 
         //assign the query here
-        String query="DELETE FROM bookings WHERE fid=? and uid=?";
+        String query = "DELETE FROM bookings WHERE fid=? and uid=?";
 
         if (selectedFlight == null) {
             // Show an error alert if no flight is selected
@@ -149,23 +146,19 @@ public class ManageBookingsScreen extends Application implements EventHandler<Ac
             //get login id for the delete query
             int UserID = login.getUserID();
             //get flight number
-            int flightID= selectedFlight.getNumber();
-
+            int flightID = selectedFlight.getNumber();
 
 
             //I am adding the database stuff  now
-            Privateconnection db=new Privateconnection();
-            try(Connection connection =db.getConnection();
-            PreparedStatement stmt=connection.prepareStatement(query)){
+            Privateconnection db = new Privateconnection();
+            try (Connection connection = db.getConnection();
+                 PreparedStatement stmt = connection.prepareStatement(query)) {
                 stmt.setInt(1, flightID);
                 stmt.setInt(2, UserID);
 
-                int rows= stmt.executeUpdate();
-                int getcapacity=selectedFlight.getCurrentCapacity();
+                int rows = stmt.executeUpdate();
 
-                if(rows>0){
-                    selectedFlight.setCurrentCapacity(getcapacity+1);
-
+                if (rows > 0) {
                     // Show a confirmation alert
                     bookedFlights.remove(selectedFlight);
                     Alert alert = new Alert(AlertType.INFORMATION);
@@ -173,8 +166,7 @@ public class ManageBookingsScreen extends Application implements EventHandler<Ac
                     alert.setHeaderText("Your flight has been deleted.");
                     alert.setContentText("You have successfully deleted the flight.");
                     alert.showAndWait();
-                }
-                else{
+                } else {
 
                     Alert alert = new Alert(AlertType.ERROR);
                     alert.setTitle("Flight Deletion Failed");
@@ -184,9 +176,7 @@ public class ManageBookingsScreen extends Application implements EventHandler<Ac
                 }
 
 
-            }
-            catch (SQLException e)
-            {
+            } catch (SQLException e) {
                 System.out.println(e.getMessage());
             }
 
@@ -199,31 +189,33 @@ public class ManageBookingsScreen extends Application implements EventHandler<Ac
     }
 
     @Override
-    public void handle(ActionEvent actionEvent)
-    {
+    public void handle(ActionEvent actionEvent) {
         // adding search flights pane
-        if(actionEvent.getSource()==searchButton){
+        if (actionEvent.getSource() == searchButton) {
             SearchFlightsScreen searchFlightsScreen = new SearchFlightsScreen(login);
             searchFlightsScreen.start(new Stage());
             stage.close();
         }
 
     }
-    private void userBookings(int userID) {
 
-        String query="SELECT f.number ,f.destination,f.departureLocation,f.capacity,f.currentCapacity,f.takeoff,f.landing,f.date,f.status FROM bookings b " +
-                "INNER JOIN flights f on b.fid=f.number WHERE b.uid=?";
-        Privateconnection db=new Privateconnection();
-        try (Connection connection=db.getConnection();
-             PreparedStatement preparedStatement = connection.prepareStatement(query);)
-        {
-            preparedStatement.setInt(1,userID);
-            ResultSet rs=preparedStatement.executeQuery();
-            // clearing the table first
+    private void userBookings(int userID) {
+        String query = "SELECT f.number, f.destination, f.departureLocation, f.capacity, f.currentCapacity, f.takeoff, f.landing, f.date, f.status " +
+                "FROM bookings b " +
+                "INNER JOIN flights f ON b.fid = f.number " +
+                "WHERE b.uid = ?";
+        Privateconnection db = new Privateconnection();
+        try (Connection connection = db.getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(query)) {
+            preparedStatement.setInt(1, userID);
+            ResultSet rs = preparedStatement.executeQuery();
+
+            // Clear existing data
             bookedFlights.clear();
 
-            while(rs.next()){
-                Flight flight = new Flight(rs.getInt("number"),
+            while (rs.next()) {
+                Flight flight = new Flight(
+                        rs.getInt("number"),
                         rs.getString("destination"),
                         rs.getString("departureLocation"),
                         rs.getInt("capacity"),
@@ -231,16 +223,15 @@ public class ManageBookingsScreen extends Application implements EventHandler<Ac
                         rs.getTimestamp("takeoff"),
                         rs.getTimestamp("landing"),
                         rs.getDate("date"),
-                        rs.getString("status"));
-                flight.toString();
+                        rs.getString("status")
+                );
                 bookedFlights.add(flight);
             }
         } catch (SQLException e) {
-            System.out.println(e.getMessage());
+            System.out.println("Error retrieving user bookings: " + e.getMessage());
         }
     }
 }
-
 
 
 
