@@ -200,7 +200,12 @@ public class AdminManageFlightsScreen extends Application implements EventHandle
                 alert.setContentText("Please select a flight to update");
                 alert.showAndWait();
             } else {
-                // TODO Create Update Flight Screen
+                // Creates a new screen with the selected flight being passed
+                AdminUpdateFlightScreen updateScreen = new AdminUpdateFlightScreen(selectedFlight);
+
+                // Launch the screen
+                Stage updateStage = new Stage();
+                updateScreen.start(updateStage);
             }
         }
 

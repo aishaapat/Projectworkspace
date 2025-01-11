@@ -13,9 +13,9 @@ public class Flight {
     private int capacity; // Total seating capacity
     private int currentCapacity; // Seats left on the flight
     private Timestamp takeoff; // Takeoff time
-    private Timestamp landing; // Landing time
-    private Date date; // Date of the flight
-    private String status; // Flight status (e.g., "On time", "Delayed", "Cancelled")
+    private static Timestamp landing; // Landing time
+    private static Date date; // Date of the flight
+    private static String status; // Flight status (e.g., "On time", "Delayed", "Cancelled")
 
     // Constructor to initialize all fields
     public Flight(int number, String destination, String departureLocation, int capacity, int currentCapacity, Timestamp takeoff, Timestamp landing, Date date, String status) {
@@ -75,7 +75,7 @@ public class Flight {
         this.takeoff = takeoff;
     }
 
-    public Timestamp getLanding() {
+    public static Timestamp getLanding() {
         return landing;
     }
 
@@ -83,7 +83,7 @@ public class Flight {
         this.landing = landing;
     }
 
-    public Date getDate() {
+    public static Date getDate() {
         return date;
     }
 
@@ -91,7 +91,7 @@ public class Flight {
         this.date = date;
     }
 
-    public String getStatus() {
+    public static String getStatus() {
         return status;
     }
 
