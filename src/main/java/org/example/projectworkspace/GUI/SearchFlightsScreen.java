@@ -18,14 +18,18 @@ import org.example.projectworkspace.UserState.LoggedIn;
 import java.sql.*;
 import java.util.Date;
 
+// Note application is the main class used for javaFX applications so the UI can work
+
 public class SearchFlightsScreen extends Application {
 
-    private LoggedIn login;
+    private LoggedIn login; // holds user login information
 
+    // Tells the app whose login information to use for the screen
     public SearchFlightsScreen(LoggedIn login) {
         this.login = login;
     }
 
+    // Declaring the ui components
     private Label label1, label2, label3;
     private TextField fromCityField, toCityField, takeOff;
     private DatePicker flightDate;
@@ -33,14 +37,17 @@ public class SearchFlightsScreen extends Application {
     private TableView<Flight> tableView;
     private ObservableList<Flight> currentFlights = FXCollections.observableArrayList();
 
+
     @Override
     public void start(Stage stage) {
+        // Creates the root layout with a grid pane
         GridPane root = new GridPane();
         root.setAlignment(Pos.CENTER);
         root.setVgap(10);
         root.setHgap(10);
         root.setPadding(new Insets(20, 20, 20, 20));
 
+        // Label and text fields for the search
         label1 = new Label("Search Flights");
         label1.setStyle("-fx-font-size: 24px; -fx-font-weight: bold;");
 
@@ -59,8 +66,9 @@ public class SearchFlightsScreen extends Application {
         takeOff = new TextField();
         takeOff.setPromptText("Enter take-off time");
 
-        tableView = createTableView();
+        tableView = createTableView(); // Creates a table to display flight information
 
+        // Creating buttons for searching and booking flights as well as one to go back to the previous screen
         searchButton = new Button("Search Flights");
         searchButton.setOnAction(e -> searchFlights());
 
@@ -71,6 +79,7 @@ public class SearchFlightsScreen extends Application {
         Button backButton = new Button("Back");
         backButton.setOnAction(e -> goToManageBookingsScreen(stage));
 
+        // Adds the components created to the UI
         root.add(label1, 0, 0, 2, 1);
         root.add(label2, 0, 1);
         root.add(fromCityField, 1, 1);
@@ -85,12 +94,14 @@ public class SearchFlightsScreen extends Application {
         root.add(backButton, 0, 6); // Add back button
         root.add(tableView, 0, 7, 2, 1);
 
+        // Creates the scene and shows the stage
         Scene scene = new Scene(root, 800, 600);
         stage.setTitle("Flight Booking System");
         stage.setScene(scene);
         stage.show();
     }
 
+    // Method to assign to the back button event handler that goes back to the previous screen
     private void goToManageBookingsScreen(Stage stage) {
         ManageBookingsScreen manageBookingsScreen = new ManageBookingsScreen(login);
         try {
