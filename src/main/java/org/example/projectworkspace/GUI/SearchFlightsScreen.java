@@ -255,13 +255,13 @@ public class SearchFlightsScreen extends Application {
             ResultSet resultSet = preparedStatement.executeQuery();
             if (resultSet.next() && resultSet.getInt(1) > 0) {
                 showAlert(Alert.AlertType.WARNING, "Time Conflict", "You already have a booking during this time.");
-                return false;
+                return false; // There is a conflict
             }
         } catch (SQLException e) {
             e.printStackTrace();
             showAlert(Alert.AlertType.ERROR, "Error", "Failed to check for time conflicts.");
         }
-        return true;
+        return true; // No conflict found
     }
 
 
@@ -273,8 +273,9 @@ public class SearchFlightsScreen extends Application {
             return;
         }
 
-        if (!checkForDuplicateBookings(selectedFlight) || !checkForTimeConflicts(selectedFlight)) {
-            return;
+        // Check for time conflicts first
+        if (!checkForTimeConflicts(selectedFlight)) {
+            return; // If there's a conflict, stop the booking process
         }
 
         String query = "INSERT INTO bookings (fid, uid) VALUES (?, ?)";
@@ -297,6 +298,7 @@ public class SearchFlightsScreen extends Application {
             showAlert(Alert.AlertType.ERROR, "Error", "An error occurred while booking the flight.");
         }
     }
+
 
 
     private void showAlert(Alert.AlertType alertType, String title, String message) {
