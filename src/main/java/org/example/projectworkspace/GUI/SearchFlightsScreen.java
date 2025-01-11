@@ -90,8 +90,12 @@ public class SearchFlightsScreen extends Application {
         root.add(new Label("Flight Time:"), 0, 4);
         root.add(takeOff, 1, 4);
         root.add(searchButton, 0, 5);
+        searchButton.setStyle("-fx-background-color: #4CAF50; -fx-text-fill: white; -fx-font-size: 12px; -fx-padding: 7px 12px;");
+        //adding styling to all buttons last minute
+        bookButton.setStyle("-fx-background-color: #4CAF50; -fx-text-fill: white; -fx-font-size: 12px; -fx-padding: 7px 12px;");
         root.add(bookButton, 1, 5);
         root.add(backButton, 0, 6); // Add back button
+        backButton.setStyle("-fx-background-color: #4CAF50; -fx-text-fill: white; -fx-font-size: 12px; -fx-padding: 7px 12px;");
         root.add(tableView, 0, 7, 2, 1);
 
         // Creates the scene and shows the stage

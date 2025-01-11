@@ -94,12 +94,16 @@ public class ManageBookingsScreen extends Application implements EventHandler<Ac
 
         // Delete button action
         Button deleteButton = new Button("Delete Flight");
+        //adding styling to buttons
+        deleteButton.setStyle("-fx-background-color: #4CAF50; -fx-text-fill: white; -fx-font-size: 12px; -fx-padding: 7px 12px;");
         deleteButton.setOnAction(e -> handleDeleteFlight(tableView));
 
         searchButton.setOnAction(this);
+        searchButton.setStyle("-fx-background-color: #4CAF50; -fx-text-fill: white; -fx-font-size: 12px; -fx-padding: 7px 12px;");
 
         // Back to Main Menu Button
         Button backButton = new Button("Back to Main Menu");
+        backButton.setStyle("-fx-background-color: #4CAF50; -fx-text-fill: white; -fx-font-size: 12px; -fx-padding: 7px 12px;");
         backButton.setOnAction(e ->
         {
             if ("user".equals(login.getType()) || login.getType() == null) {
