@@ -255,10 +255,15 @@ public class SearchFlightsScreen extends Application {
 
 
 
+
     private void addFlights() {
         Flight selectedFlight = tableView.getSelectionModel().getSelectedItem();
         if (selectedFlight == null) {
             showAlert(Alert.AlertType.WARNING, "Warning", "Please select a flight to book.");
+            return;
+        }
+        if(selectedFlight.getCurrentCapacity()==0){
+            showAlert(Alert.AlertType.WARNING, "Warning", "There is no more capacity in this plane.");
             return;
         }
 
@@ -278,6 +283,7 @@ public class SearchFlightsScreen extends Application {
 
             if (rowsAffected > 0) {
                 showAlert(Alert.AlertType.INFORMATION, "Success", "Flight booked successfully!");
+                selectedFlight.setCurrentCapacity(selectedFlight,-1,selectedFlight.getNumber());
             } else {
                 showAlert(Alert.AlertType.ERROR, "Error", "Failed to book the flight.");
             }

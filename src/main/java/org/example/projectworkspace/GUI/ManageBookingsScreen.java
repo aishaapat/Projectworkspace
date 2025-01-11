@@ -166,6 +166,7 @@ public class ManageBookingsScreen extends Application implements EventHandler<Ac
                     alert.setHeaderText("Your flight has been deleted.");
                     alert.setContentText("You have successfully deleted the flight.");
                     alert.showAndWait();
+                    selectedFlight.setCurrentCapacity(selectedFlight,1,selectedFlight.getNumber());
                 } else {
 
                     Alert alert = new Alert(AlertType.ERROR);

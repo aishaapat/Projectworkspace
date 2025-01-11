@@ -106,5 +106,30 @@ public class Flight {
                 ", capacity=" + capacity + ", currentCapacity=" + currentCapacity + ", takeoff=" + takeoff +
                 ", landing=" + landing + ", date=" + date + ", status=" + status + "]";
     }
+    public void setCurrentCapacity(Flight flight, int num, int flightnumber) {
+        String query = "UPDATE flights SET currentCapacity = ? WHERE number = ?";
+
+        try (Connection connection = new Privateconnection().getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(query)) {
+
+            // Calculate the new capacity
+            int setCapacity = flight.getCurrentCapacity() + num;
+
+            preparedStatement.setInt(1, setCapacity); // New capacity
+            preparedStatement.setInt(2, flightnumber);
+
+            // Execute the update query
+            int rowsAffected = preparedStatement.executeUpdate();
+            if (rowsAffected > 0) {
+                System.out.println("Flight capacity updated successfully.");
+            } else {
+                System.out.println("Flight was not updated");
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            throw new RuntimeException("Failed to update the flight capacity.", e);
+        }
+    }
+
 
 }
