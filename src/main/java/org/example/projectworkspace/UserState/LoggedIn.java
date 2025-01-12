@@ -12,7 +12,7 @@ public class LoggedIn
     String FirstName=null;
     String type=null;
     int userID=0;
-
+//this class is to record and save the logged in data
 
     public String getUserName(){
         return UserName;
@@ -32,6 +32,8 @@ public class LoggedIn
     public void setPassword(String Password){
         this.Password = Password;
     }
+
+    //helps search db to look for user first name
     public String getFirstName()
     {
         this.FirstName = FirstName;
