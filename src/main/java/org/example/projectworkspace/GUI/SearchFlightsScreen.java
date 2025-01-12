@@ -244,22 +244,21 @@ public class SearchFlightsScreen extends Application {
     }
 
     private boolean checkForTimeConflicts(Flight selectedFlight) {
-        String query = "SELECT COUNT(*) FROM bookings b " +
+        String query = "SELECT date FROM bookings b " +
                 "JOIN flights f ON b.fid = f.number " +
-                "WHERE b.uid = ? AND (f.takeoff = ? OR f.landing = ?)";
+                "WHERE b.uid = ?";
         try (Connection connection = new Privateconnection().getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(query)) {
 
             preparedStatement.setInt(1, login.getUserID());
 
-            // Use java.sql.Timestamp for takeoff and landing
-            preparedStatement.setTimestamp(2, new Timestamp(selectedFlight.getTakeoff().getTime()));
-            preparedStatement.setTimestamp(3, new Timestamp(selectedFlight.getLanding().getTime()));
 
             ResultSet resultSet = preparedStatement.executeQuery();
-            if (resultSet.next() && resultSet.getInt(1) > 0) {
-                showAlert(Alert.AlertType.WARNING, "Time Conflict", "You already have a booking during this time.");
-                return false; // There is a conflict
+            while (resultSet.next()) {
+                if (resultSet.getDate("date").equals(selectedFlight.getDate())) {
+                    showAlert(Alert.AlertType.WARNING, "Time Conflict", "You already have a booking during this time.");
+                    return false; // There is a conflict
+                }
             }
         } catch (SQLException e) {
             e.printStackTrace();
