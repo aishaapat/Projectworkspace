@@ -35,6 +35,7 @@ public class AdminManageFlightsScreen extends Application implements EventHandle
     BackButton backbutton=new BackButton();
     Button AddButton= new Button("Add Flight");
     DeleteButton DeleteButton = new DeleteButton();
+    Button updateButton = new Button("Update");
 
     //adding a observable list for the flights creating it public so that Add flights can acess it
     public ObservableList<Flight> allFlights = FXCollections.observableArrayList();
@@ -42,67 +43,67 @@ public class AdminManageFlightsScreen extends Application implements EventHandle
 
 
     @Override
-    public void start(Stage stage) throws Exception
-    {
+    public void start(Stage stage) throws Exception {
         this.stage = stage;
         GridPane root = new GridPane();
         root.getStyleClass().add("background-primary");
         root.setAlignment(Pos.CENTER);
-        root.setVgap(10);
+        root.setHgap(15); // Horizontal gap between elements
+        root.setVgap(10); // Vertical gap between elements
+
+        // Title
         Label title = new Label("Admin Manage Flights");
         title.setStyle("-fx-font-size: 24px; -fx-font-weight: bold;");
+        root.add(title, 0, 0, 6, 1); // Span title across all columns
 
-        //adding table componenets
-
-        //add method here for parsing flights into table from query
+        // TableView Configuration
         displayFlights();
         tableView.setItems(allFlights);
-        // using same cell value factors as managebookings screen
         TableColumn<Flight, String> fromCityCol = new TableColumn<>("From City");
         fromCityCol.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getDepartureLocation()));
-
         TableColumn<Flight, String> toCityCol = new TableColumn<>("To City");
         toCityCol.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getDestination()));
-
         TableColumn<Flight, String> capacityCol = new TableColumn<>("Capacity");
         capacityCol.setCellValueFactory(cellData -> new SimpleStringProperty(String.valueOf(cellData.getValue().getCapacity())));
-
         TableColumn<Flight, String> currentcapacityCol = new TableColumn<>("Current Capacity");
         currentcapacityCol.setCellValueFactory(cellData -> new SimpleStringProperty(String.valueOf(cellData.getValue().getCurrentCapacity())));
-
         TableColumn<Flight, String> dateCol = new TableColumn<>("Date");
         dateCol.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getDate().toString()));
-
         TableColumn<Flight, String> timeCol = new TableColumn<>("Time");
         timeCol.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getTakeoff().toString()));
-
         TableColumn<Flight, String> landingCol = new TableColumn<>("Landing Time");
         landingCol.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getLanding().toString()));
-
         TableColumn<Flight, String> flightstatus = new TableColumn<>("Status");
         flightstatus.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getStatus()));
+        tableView.getColumns().addAll(fromCityCol, toCityCol, capacityCol, currentcapacityCol, dateCol, timeCol, landingCol, flightstatus);
+        root.add(tableView, 0, 1, 6, 1); // Span table across all columns
 
-        tableView.getColumns().addAll( fromCityCol, toCityCol,capacityCol,currentcapacityCol ,dateCol, timeCol,landingCol,flightstatus);
+        // Buttons
+        backbutton.setStyle("-fx-background-color: #2196F3; -fx-text-fill: white; -fx-font-size: 16px; -fx-padding: 10px 20px;");
+        root.add(backbutton, 0, 2);
 
-        root.add(backbutton, 5,0);
         AddButton.setStyle("-fx-background-color: #4CAF50; -fx-text-fill: white; -fx-font-size: 16px; -fx-padding: 10px 20px;");
-        root.add(AddButton, 1, 2, 2, 1);
-        root.add(DeleteButton, 2, 2, 2, 1);
-        root.add(title, 0, 0, 2, 1);
-        root.add(tableView, 0, 1, 2, 1);
+        root.add(AddButton, 1, 2);
+
+        DeleteButton.setStyle("-fx-background-color: #F44336; -fx-text-fill: white; -fx-font-size: 16px; -fx-padding: 10px 20px;");
+        root.add(DeleteButton, 2, 2);
+
+        updateButton.setStyle("-fx-background-color: #FF9800; -fx-text-fill: white; -fx-font-size: 16px; -fx-padding: 10px 20px;");
+        root.add(updateButton, 3, 2);
+
+        // Event Handlers
         backbutton.setOnAction(this);
         AddButton.setOnAction(this);
         DeleteButton.setOnAction(this);
+        updateButton.setOnAction(this);
+
+        // Scene and Stage
         Scene scene = new Scene(root, 700, 700);
-        stage.setTitle("Admin manage flights");
+        stage.setTitle("Admin Manage Flights");
         stage.setScene(scene);
-
-
-
         stage.show();
-
-
     }
+
 
     @Override
     public void handle(ActionEvent actionEvent)
@@ -189,6 +190,24 @@ public class AdminManageFlightsScreen extends Application implements EventHandle
             }
 
         }
+        else if (actionEvent.getSource() == updateButton) {
+            Flight selectedFlight = tableView.getSelectionModel().getSelectedItem();
+
+            if (selectedFlight == null) {
+                Alert alert = new Alert(Alert.AlertType.WARNING);
+                alert.setTitle("No Selection");
+                alert.setHeaderText("No Flight Selected");
+                alert.setContentText("Please select a flight to update");
+                alert.showAndWait();
+            } else {
+                // Creates a new screen with the selected flight being passed
+                AdminUpdateFlightScreen updateScreen = new AdminUpdateFlightScreen(selectedFlight);
+
+                // Launch the screen
+                Stage updateStage = new Stage();
+                updateScreen.start(updateStage);
+            }
+        }
 
     }
     //create method to show all the flights
@@ -219,4 +238,4 @@ public class AdminManageFlightsScreen extends Application implements EventHandle
             throw new RuntimeException(e);
         }
     }
-    }
+}
