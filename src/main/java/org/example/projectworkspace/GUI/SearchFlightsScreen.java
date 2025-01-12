@@ -285,7 +285,6 @@ public class SearchFlightsScreen extends Application {
 
         // Check for time conflicts first
         if (!checkForTimeConflicts(selectedFlight)) {
-            showAlert(Alert.AlertType.WARNING, "Time Conflict", "You already have a booking during this time.");
             return; // If there's a conflict, stop the booking process
         }
 
