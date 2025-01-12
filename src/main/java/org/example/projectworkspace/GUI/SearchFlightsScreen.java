@@ -269,8 +269,6 @@ public class SearchFlightsScreen extends Application {
     }
 
 
-
-
     private void addFlights() {
         Flight selectedFlight = tableView.getSelectionModel().getSelectedItem();
         if (selectedFlight == null) {
@@ -282,8 +280,13 @@ public class SearchFlightsScreen extends Application {
             return;
         }
 
+        if(!checkForDuplicateBookings(selectedFlight)){
+            return; /// we have to check for duplicates first because if not it will think it is a time conflict
+        }
+
         // Check for time conflicts first
         if (!checkForTimeConflicts(selectedFlight)) {
+            showAlert(Alert.AlertType.WARNING, "Time Conflict", "You already have a booking during this time.");
             return; // If there's a conflict, stop the booking process
         }
 
